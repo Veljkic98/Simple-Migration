@@ -31,15 +31,15 @@ public class Profile {
         return fraction;
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     public static class Builder {
 
         private String month;
         private String profile;
         private double fraction;
-
-        public static Builder newInstance() {
-            return new Builder();
-        }
 
         private Builder() {}
 
