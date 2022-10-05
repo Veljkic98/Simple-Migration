@@ -30,16 +30,16 @@ public class MeterReading {
         return meter;
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     public static class Builder {
 
         private String meterID;
         private String profile;
         private String month;
         private String meter;
-
-        public static Builder newInstance() {
-            return new Builder();
-        }
 
         private Builder() {}
 

@@ -46,6 +46,7 @@ public class DummyDataService {
         for (int i = 0; i < NUMBER_OF_PROFILES; i++) {
             profileNames[i] = fakeValuesService.regexify("[A-E]{2}");
         }
+
         writeProfilesToCSV(createProfiles(profileNames));
         writeMeterReadingsToCSV(createMeterReadings(profileNames));
     }
@@ -89,10 +90,10 @@ public class DummyDataService {
     }
 
     private List<Profile> createProfiles(String[] profileNames) {
-        List<Profile> profiles =new ArrayList<>();
+        List<Profile> profiles = new ArrayList<>();
         for (int i = 0; i < NUMBER_OF_PROFILES; i++) {
             for (int j = 0; j < 12; j++) {
-                profiles.add(Profile.Builder.newInstance()
+                profiles.add(Profile.builder()
                         .setFraction(ARRAY_OF_FRACTIONS[j])
                         .setMonth(ARRAY_OF_MONTHS[j])
                         .setProfile(profileNames[i])
@@ -104,15 +105,19 @@ public class DummyDataService {
 
     private List<MeterReading> createMeterReadings(String[] profileNames) {
         List<MeterReading> meterReadings = new ArrayList<>();
-        int meter;
+//        double decemberMeterReading = random.nextDouble(160, 250);
+        double decemberMeterReading = 240;
+
         for (int i = 0; i < NUMBER_OF_PROFILES; i++) {
-            meter = random.nextInt(10);
+            String meterId = fakeValuesService.regexify("[0-4]{2}");
+            int meter = 0;
             for (int j = 0; j < 12; j++) {
-                meterReadings.add(MeterReading.Builder.newInstance()
-                        .setMeterID(fakeValuesService.regexify("[0-4]{2}"))
+                meter = (int) (meter + (decemberMeterReading * ARRAY_OF_FRACTIONS[j]));
+                meterReadings.add(MeterReading.builder()
+                        .setMeterID(meterId)
                         .setMonth(ARRAY_OF_MONTHS[j])
                         .setProfile(profileNames[i])
-                        .setMeter((meter + random.nextInt(5)) + "")
+                        .setMeter(meter + "")
                         .build());
             }
         }
