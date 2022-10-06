@@ -29,6 +29,12 @@ services:
     restart: always
     ports:
       - "8081:8081"
+  profile_container:
+    container_name: profile_service_container
+    image: "profile-service:latest"
+    restart: always
+    ports:
+      - "8082:8082"
 
 volumes:
   db:
