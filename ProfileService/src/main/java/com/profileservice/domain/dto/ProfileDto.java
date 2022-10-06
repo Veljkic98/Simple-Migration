@@ -1,30 +1,20 @@
-package com.transformservice.domain.entity;
+package com.profileservice.domain.dto;
 
-import javax.persistence.*;
+import com.profileservice.domain.entity.Profile;
 
-@Entity
-@Table(name = "profile", uniqueConstraints = { @UniqueConstraint(columnNames = { "name", "\"month\"" }) })
-public class Profile {
+public class ProfileDto {
 
-    @Id
-    @Column
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
     private String name;
 
-    @Column(name = "\"month\"", nullable = false)
     private String month;
 
-    @Column(nullable = false)
     private Double fraction;
 
-    @Column(nullable = false)
     private Integer meterReading;
 
-    public Profile() {
-        // empty constructor
+    public ProfileDto() {
     }
 
     public Long getId() {
@@ -47,27 +37,7 @@ public class Profile {
         return meterReading;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setMonth(String month) {
-        this.month = month;
-    }
-
-    public void setFraction(Double fraction) {
-        this.fraction = fraction;
-    }
-
-    public void setMeterReading(Integer meterReading) {
-        this.meterReading = meterReading;
-    }
-
-    public Profile(Builder builder) {
+    public ProfileDto(Builder builder) {
         this.id = builder.id;
         this.name = builder.name;
         this.month = builder.month;
@@ -87,34 +57,44 @@ public class Profile {
             return new Builder();
         }
 
-        public Builder setId(Long id) {
+        public Builder id(Long id) {
             this.id = id;
             return this;
         }
 
-        public Builder setName(String name) {
+        public Builder name(String name) {
             this.name = name;
             return this;
         }
 
-        public Builder setMonth(String month) {
+        public Builder month(String month) {
             this.month = month;
             return this;
         }
 
-        public Builder setFraction(Double fraction) {
+        public Builder fraction(Double fraction) {
             this.fraction = fraction;
             return this;
         }
 
-        public Builder setMeterReading(Integer meterReading) {
+        public Builder meterReading(Integer meterReading) {
             this.meterReading = meterReading;
             return this;
         }
 
-        public Profile build() {
-            return new Profile(this);
+        public ProfileDto build() {
+            return new ProfileDto(this);
         }
+    }
+
+    public static ProfileDto fromEntity(Profile profile) {
+        return Builder.newInstance()
+                .id(profile.getId())
+                .fraction(profile.getFraction())
+                .meterReading(profile.getMeterReading())
+                .name(profile.getName())
+                .month(profile.getMonth())
+                .build();
     }
 
 }
