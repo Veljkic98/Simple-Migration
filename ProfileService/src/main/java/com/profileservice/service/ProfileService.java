@@ -16,6 +16,9 @@ import java.util.stream.Collectors;
 
 import static com.profileservice.util.ApplicationConstants.createMapOfMonths;
 
+/**
+ * @author veljkoplecas
+ */
 @Service
 public class ProfileService {
 
@@ -26,6 +29,13 @@ public class ProfileService {
         this.profileRepository = profileRepository;
     }
 
+    /**
+     * Method to find profile by id.
+     *
+     * @param profileId is ID of profile
+     * @throws DataNotFoundException if Profile by profileId is not found.
+     * @return ProfileDto
+     */
     public ProfileDto getOne(Long profileId) {
         Optional<Profile> profile;
 
@@ -36,6 +46,12 @@ public class ProfileService {
         return ProfileDto.fromEntity(profile.get());
     }
 
+    /**
+     * Metod to find all 12 profiles by profile name.
+     *
+     * @param name is profile name
+     * @return list of profiles
+     */
     public List<ProfileDto> getAllByName(String name) {
         List<ProfileDto> profiles = profileRepository.findAllByName(name)
                 .stream()
@@ -47,6 +63,16 @@ public class ProfileService {
         return profiles;
     }
 
+    /**
+     * Method to find consumption between 2 months.
+     * If months are same that means consumption
+     * only for that month.
+     *
+     * @param name
+     * @param monthFrom
+     * @param monthTo
+     * @return
+     */
     public ConsumptionDto getConsumptionForMonths(String name, String monthFrom, String monthTo) {
         List<ProfileDto> profiles = profileRepository.findAllByName(name)
                 .stream()

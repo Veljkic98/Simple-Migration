@@ -48,14 +48,25 @@ public class ProfileService {
         }
     }
 
+    /*
+     * Method to check are all 12 profiles valid
+     * to be saved to DB.
+     */
     private boolean isValid(List<Profile> profiles) {
         sortProfiles(profiles);
-        removeDisproportionateMeterReadings(profiles);
-        return isAllFieldsNotNull(profiles) &&
+
+        boolean canBeSaved = isAllFieldsNotNull(profiles) &&
                 isSumOfAllFractionsEqualsOne(profiles) &&
                 isMeterReadingIncreasingByMonths(profiles);
+
+        removeDisproportionateMeterReadings(profiles);
+
+        return canBeSaved;
     }
 
+    /*
+     * Method to sort profiles by months.
+     */
     private void sortProfiles(List<Profile> profiles) {
         Map<String, Integer> months = createMapOfMonths();
 
@@ -69,6 +80,12 @@ public class ProfileService {
         profiles.sort(customComparator);
     }
 
+    /*
+     * Method to remove disproportionate meter readings.
+     * If meter reading is bigger or smaller than
+     * 25% deviation of desirable meter reading than
+     * it will be removed.
+     */
     private void removeDisproportionateMeterReadings(List<Profile> profiles) {
         ListIterator<Profile> iter = profiles.listIterator();
         double desirableMeterReading = 0;
@@ -81,6 +98,10 @@ public class ProfileService {
         }
     }
 
+    /*
+     * Validation method to check is meter reading
+     * increasing or stay same by every month.
+     */
     private boolean isMeterReadingIncreasingByMonths(List<Profile> profiles) {
         int meterReading = 0;
         for (Profile p : profiles) {
@@ -104,6 +125,10 @@ public class ProfileService {
         return true;
     }
 
+    /*
+     * Method to find fractions from file with profiles and fractions
+     * and attach them to profiles.
+     */
     private void attachFractions(List<Profile> profiles) throws IOException, CsvValidationException {
         FileReader filereader = new FileReader(csvFilePath + "profiles.csv");
         CSVReader csvReader = new CSVReaderBuilder(filereader)
