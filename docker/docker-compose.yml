@@ -1,0 +1,37 @@
+version: '3.9'
+services:
+  db:
+    container_name: profile_db
+    image: 'postgres:latest'
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - '5432:5432'
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - db:/var/lib/postgresql/data
+  pgadmin:
+    container_name: profile_pgadmin
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: root
+    ports:
+      - "5050:80"
+    volumes:
+      - pg-data:/var/lib/pgadmin
+  transform_container:
+    container_name: transform_service_container
+    image: "transform-service:latest"
+    restart: always
+    ports:
+      - "8081:8081"
+
+volumes:
+  db:
+    driver: local
+  pg-data:
+    driver: local
