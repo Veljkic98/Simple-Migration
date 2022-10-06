@@ -1,6 +1,7 @@
 package com.transformservice.error;
 
 import com.opencsv.exceptions.CsvValidationException;
+import com.transformservice.exception.ColumnDataMissingException;
 import com.transformservice.exception.DataNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
@@ -39,6 +40,12 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     @ExceptionHandler(value = { DataNotFoundException.class })
     protected ResponseEntity<Object> handleNotFound(final DataNotFoundException ex, final WebRequest request) {
         final String bodyOfResponse = "Some of fields missing.";
+        return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+    }
+
+    @ExceptionHandler(value = { ColumnDataMissingException.class })
+    protected ResponseEntity<Object> handleNotFound(final ColumnDataMissingException ex, final WebRequest request) {
+        final String bodyOfResponse = "Column data is missing.";
         return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
 
