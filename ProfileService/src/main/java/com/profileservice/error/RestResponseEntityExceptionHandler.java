@@ -20,8 +20,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
     @ExceptionHandler(value = { DataNotFoundException.class })
     protected ResponseEntity<Object> handleNotFound(final DataNotFoundException ex, final WebRequest request) {
-        final String bodyOfResponse = "Data not found.";
-        return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+        return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
 
 }

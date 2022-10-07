@@ -40,7 +40,7 @@ public class ProfileService {
         Optional<Profile> profile;
 
         if ((profile = profileRepository.findById(profileId)).isEmpty()) {
-            throw new DataNotFoundException();
+            throw new DataNotFoundException(String.format("Profile with id %s not found.", profileId));
         }
 
         return ProfileDto.fromEntity(profile.get());
@@ -57,6 +57,10 @@ public class ProfileService {
                 .stream()
                 .map(ProfileDto::fromEntity)
                 .collect(Collectors.toList());
+
+        if (profiles.isEmpty()) {
+            throw new DataNotFoundException(String.format("Profiles with name '%s' not found.", name));
+        }
 
         sortProfiles(profiles);
 
@@ -79,13 +83,16 @@ public class ProfileService {
                 .map(ProfileDto::fromEntity)
                 .collect(Collectors.toList());
 
+        if (profiles.isEmpty())
+            throw new DataNotFoundException(String.format("Profiles with name '%s' not found.", name));
+
         Optional<ProfileDto> profileOfMonthFrom = profiles
                 .stream()
                 .filter(p -> p.getMonth().equals(monthFrom.toUpperCase()))
                 .findAny();
 
         if (profileOfMonthFrom.isEmpty()) {
-            throw new DataNotFoundException();
+            throw new DataNotFoundException(String.format("Profile with month '%s' does not exists.", monthFrom));
         }
 
         if (monthFrom.equalsIgnoreCase(monthTo))
@@ -97,7 +104,7 @@ public class ProfileService {
                 .findAny();
 
         if (profileOfMonthTo.isEmpty()) {
-            throw new DataNotFoundException();
+            throw new DataNotFoundException(String.format("Profile with month '%s' does not exists.", monthTo));
         }
 
         return ConsumptionDto
@@ -110,12 +117,13 @@ public class ProfileService {
     }
 
     private ConsumptionDto findConsumptionForOneMonth(ProfileDto profileDto, List<ProfileDto> profiles) {
-        if (profileDto.getMonth().equalsIgnoreCase("JAN"))
+        if (profileDto.getMonth().equalsIgnoreCase("JAN")) {
             return ConsumptionDto.Builder.newInstance()
                     .monthFrom(profileDto.getMonth())
                     .monthTo(profileDto.getMonth())
                     .consumption(profileDto.getMeterReading())
                     .build();
+        }
 
         int previousMonthMeterReading = getPreviousMonthMeterReading(profileDto.getMonth(), profiles);
 
@@ -127,6 +135,8 @@ public class ProfileService {
     }
 
     private Integer getPreviousMonthMeterReading(String month, List<ProfileDto> profiles) {
+        if (month.equalsIgnoreCase("JAN")) return 0;
+
         ProfileDto previousProfile = new ProfileDto();
         for (ProfileDto p : profiles) {
             if (p.getMonth().equalsIgnoreCase(month)) {

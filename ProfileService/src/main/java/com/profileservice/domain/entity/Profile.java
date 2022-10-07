@@ -46,4 +46,54 @@ public class Profile {
         return meterReading;
     }
 
+    public Profile(Builder builder) {
+        this.id = builder.id;
+        this.name = builder.name;
+        this.month = builder.month;
+        this.fraction = builder.fraction;
+        this.meterReading = builder.meterReading;
+    }
+
+    public static class Builder {
+
+        private Long id;
+        private String name;
+        private String month;
+        private Double fraction;
+        private Integer meterReading;
+
+        public static Builder newInstance() {
+            return new Builder();
+        }
+
+        public Builder id(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder month(String month) {
+            this.month = month;
+            return this;
+        }
+
+        public Builder fraction(Double fraction) {
+            this.fraction = fraction;
+            return this;
+        }
+
+        public Builder meterReading(Integer meterReading) {
+            this.meterReading = meterReading;
+            return this;
+        }
+
+        public Profile build() {
+            return new Profile(this);
+        }
+    }
+
 }
