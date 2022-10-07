@@ -116,7 +116,6 @@ public class ProfileService {
      */
     private boolean isValid(List<Profile> profiles) {
         sortProfiles(profiles);
-        // todo: ubaciti log warn
         boolean canBeSaved = isAllFieldsNotNull(profiles) &&
                 isSumOfAllFractionsEqualsOne(profiles) &&
                 isMeterReadingIncreasingByMonths(profiles);
@@ -183,13 +182,13 @@ public class ProfileService {
             log.warn("Sum of all fractions is not equals to 1 for profile with name: {}.", profiles.get(0).getName());
             return false;
         }
+
         return true;
     }
 
     private boolean isAllFieldsNotNull(List<Profile> profiles) {
         for (Profile p : profiles) {
             if (p.getMeterReading() == null || p.getMonth() == null || p.getFraction() == null || p.getName() == null) {
-                log.warn("Some of fields are null for profile name.");
                 return false;
             }
         }
