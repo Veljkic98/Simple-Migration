@@ -3,6 +3,7 @@ package com.profileservice.service;
 import com.profileservice.domain.dto.ConsumptionDto;
 import com.profileservice.domain.dto.ProfileDto;
 import com.profileservice.domain.entity.Profile;
+import com.profileservice.exception.BadRequestException;
 import com.profileservice.exception.DataNotFoundException;
 import com.profileservice.repository.ProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +41,7 @@ public class ProfileService {
         Optional<Profile> profile;
 
         if ((profile = profileRepository.findById(profileId)).isEmpty()) {
-            throw new DataNotFoundException();
+            throw new DataNotFoundException(String.format("Profile with id %s not found.", profileId));
         }
 
         return ProfileDto.fromEntity(profile.get());
@@ -58,6 +59,10 @@ public class ProfileService {
                 .map(ProfileDto::fromEntity)
                 .collect(Collectors.toList());
 
+        if (profiles.isEmpty()) {
+            throw new DataNotFoundException(String.format("Profiles with name '%s' not found.", name));
+        }
+
         sortProfiles(profiles);
 
         return profiles;
@@ -74,10 +79,11 @@ public class ProfileService {
      * @return
      */
     public ConsumptionDto getConsumptionForMonths(String name, String monthFrom, String monthTo) {
-        List<ProfileDto> profiles = profileRepository.findAllByName(name)
-                .stream()
-                .map(ProfileDto::fromEntity)
-                .collect(Collectors.toList());
+        if (!isMonthFromBeforeMonthTo(monthFrom.toUpperCase(), monthTo.toUpperCase())) {
+            throw new BadRequestException("Month from can not be after month to.");
+        }
+
+        List<ProfileDto> profiles = getAllByName(name);
 
         Optional<ProfileDto> profileOfMonthFrom = profiles
                 .stream()
@@ -85,11 +91,12 @@ public class ProfileService {
                 .findAny();
 
         if (profileOfMonthFrom.isEmpty()) {
-            throw new DataNotFoundException();
+            throw new DataNotFoundException(String.format("Profile with month '%s' does not exists.", monthFrom));
         }
 
-        if (monthFrom.equalsIgnoreCase(monthTo))
+        if (monthFrom.equalsIgnoreCase(monthTo)) {
             return findConsumptionForOneMonth(profileOfMonthFrom.get(), profiles);
+        }
 
         Optional<ProfileDto> profileOfMonthTo = profiles
                 .stream()
@@ -97,7 +104,7 @@ public class ProfileService {
                 .findAny();
 
         if (profileOfMonthTo.isEmpty()) {
-            throw new DataNotFoundException();
+            throw new DataNotFoundException(String.format("Profile with month '%s' does not exists.", monthTo));
         }
 
         return ConsumptionDto
@@ -110,12 +117,13 @@ public class ProfileService {
     }
 
     private ConsumptionDto findConsumptionForOneMonth(ProfileDto profileDto, List<ProfileDto> profiles) {
-        if (profileDto.getMonth().equalsIgnoreCase("JAN"))
+        if (profileDto.getMonth().equalsIgnoreCase("JAN")) {
             return ConsumptionDto.Builder.newInstance()
                     .monthFrom(profileDto.getMonth())
                     .monthTo(profileDto.getMonth())
                     .consumption(profileDto.getMeterReading())
                     .build();
+        }
 
         int previousMonthMeterReading = getPreviousMonthMeterReading(profileDto.getMonth(), profiles);
 
@@ -149,6 +157,12 @@ public class ProfileService {
         };
 
         profiles.sort(customComparator);
+    }
+
+    private boolean isMonthFromBeforeMonthTo(String monthFrom, String monthTo) {
+        Map<String, Integer> months = createMapOfMonths();
+
+        return months.get(monthFrom) <= months.get(monthTo);
     }
 
 }

@@ -1,5 +1,6 @@
 package com.profileservice.error;
 
+import com.profileservice.exception.BadRequestException;
 import com.profileservice.exception.DataNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -16,12 +17,18 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         super();
     }
 
+    // 400
+
+    @ExceptionHandler(value = { BadRequestException.class })
+    protected ResponseEntity<Object> handleBadRequest(final BadRequestException ex, final WebRequest request) {
+        return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+    }
+
     // 404
 
     @ExceptionHandler(value = { DataNotFoundException.class })
     protected ResponseEntity<Object> handleNotFound(final DataNotFoundException ex, final WebRequest request) {
-        final String bodyOfResponse = "Data not found.";
-        return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+        return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
 
 }
