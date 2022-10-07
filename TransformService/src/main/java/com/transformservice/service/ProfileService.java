@@ -25,10 +25,10 @@ public class ProfileService {
     @Value("${csv.filePath}")
     private String csvFilePath;
 
-    @Value("${meterReadings.fileName}")
+    @Value("${meterReading.fileName}")
     private String meterReadingsFileName;
 
-    @Value("${profiles.fileName}")
+    @Value("${profile.fileName}")
     private String profilesFileName;
 
     private final ProfileRepository profileRepository;
