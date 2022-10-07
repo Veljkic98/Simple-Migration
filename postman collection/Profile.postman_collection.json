@@ -1,0 +1,123 @@
+{
+	"info": {
+		"_postman_id": "7c531ada-275f-4fa8-b8ac-c2b5c2fff34c",
+		"name": "Profile",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Profile",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8082/profile/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"profile",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Profiles by Name",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true,
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "",
+							"value": "",
+							"type": "default",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8082/profile/?profileName=AC",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"profile",
+						""
+					],
+					"query": [
+						{
+							"key": "profileName",
+							"value": "AC"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Consumption",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true,
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "",
+							"value": "",
+							"type": "default",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8082/profile/consumption/?profileName=AC&monthFrom=JAN&monthTo=FEB",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"profile",
+						"consumption",
+						""
+					],
+					"query": [
+						{
+							"key": "profileName",
+							"value": "AC"
+						},
+						{
+							"key": "monthFrom",
+							"value": "JAN"
+						},
+						{
+							"key": "monthTo",
+							"value": "FEB"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
