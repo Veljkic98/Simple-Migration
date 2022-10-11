@@ -1,7 +1,7 @@
 package com.transformservice.controller;
 
 import com.opencsv.exceptions.CsvValidationException;
-import com.transformservice.service.ProfileService;
+import com.transformservice.service.TransformService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,16 +12,17 @@ import java.io.IOException;
 @RestController
 public class TransformController {
 
-    private ProfileService profileService;
+    private TransformService transformService;
 
     @Autowired
-    public TransformController(ProfileService profileService) {
-        this.profileService = profileService;
+    public TransformController(TransformService transformService) {
+        this.transformService = transformService;
     }
 
-    @GetMapping(path = "/start")
-    public ResponseEntity<Void> start() throws IOException, CsvValidationException {
-        profileService.proceed();
+    @GetMapping(path = "/parse")
+    public ResponseEntity<Void> start() throws IOException {
+        transformService.proceed();
+
         return ResponseEntity.ok().build();
     }
 
