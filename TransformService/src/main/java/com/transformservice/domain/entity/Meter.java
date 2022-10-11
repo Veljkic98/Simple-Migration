@@ -16,8 +16,11 @@ public class Meter {
     @Column(name = "meter_identifier", nullable = false)
     private String meterIdentifier;
 
+    @OneToMany(mappedBy = "meter")
+    private List<Reading> readings;
+
     @OneToOne
-    @JoinColumn(name = "profile", nullable = false)
+    @JoinColumn(name = "profile_id", nullable = false)
     private Profile profile;
 
     public Meter() {
@@ -27,6 +30,7 @@ public class Meter {
     public Meter(Builder builder) {
         this.id = builder.id;
         this.profile = builder.profile;
+        this.readings = builder.readings;
         this.meterIdentifier = builder.meterIdentifier;
     }
 
@@ -36,12 +40,16 @@ public class Meter {
         return id;
     }
 
-    public Profile getProfile() {
-        return profile;
-    }
-
     public String getMeterIdentifier() {
         return meterIdentifier;
+    }
+
+    public List<Reading> getReadings() {
+        return readings;
+    }
+
+    public Profile getProfile() {
+        return profile;
     }
 
     // set
@@ -50,21 +58,27 @@ public class Meter {
         this.id = id;
     }
 
-    public void setProfile(Profile profile) {
-        this.profile = profile;
-    }
-
     public void setMeterIdentifier(String meterIdentifier) {
         this.meterIdentifier = meterIdentifier;
+    }
+
+    public void setReadings(List<Reading> readings) {
+        this.readings = readings;
+    }
+
+    public void setProfile(Profile profile) {
+        this.profile = profile;
     }
 
     public static class Builder {
 
         private Long id;
 
-        private Profile profile;
-
         private String meterIdentifier;
+
+        private List<Reading> readings;
+
+        private Profile profile;
 
         public static Builder newInstance() {
             return new Builder();
@@ -77,6 +91,11 @@ public class Meter {
 
         public Builder meterIdentifier(String meterIdentifier) {
             this.meterIdentifier = meterIdentifier;
+            return this;
+        }
+
+        public Builder readings(List<Reading> readings) {
+            this.readings = readings;
             return this;
         }
 
@@ -96,7 +115,9 @@ public class Meter {
         return "Meter{" +
                 "id=" + id +
                 ", meterIdentifier='" + meterIdentifier + '\'' +
+                ", readings=" + readings +
                 ", profile=" + profile +
                 '}';
     }
+
 }

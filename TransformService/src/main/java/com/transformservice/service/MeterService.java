@@ -3,6 +3,7 @@ package com.transformservice.service;
 import com.transformservice.domain.entity.Meter;
 import com.transformservice.repository.MeterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,9 +18,8 @@ public class MeterService {
         this.meterRepository = meterRepository;
     }
 
-    public Meter create(Meter meter) {
+    public Meter create(Meter meter) throws DataIntegrityViolationException {
         return meterRepository.save(meter);
-        // todo: throw entityExistException
     }
 
     public List<Meter> getAll() {

@@ -16,12 +16,11 @@ public class Profile {
     @Column(nullable = false, unique = true)
     private String name;
 
-    @OneToMany
-    @JoinColumn(name = "meter_id")
-    private List<Meter> meters;
+    @OneToOne(mappedBy = "profile")
+    private Meter meter;
 
-    @OneToMany
-    @JoinColumn(name = "fraction_id")
+    @OneToMany(mappedBy = "profile")
+//    @JoinColumn(name = "fraction_id")
     private List<Fraction> fractions;
 
     public Profile() {
@@ -36,8 +35,8 @@ public class Profile {
         return name;
     }
 
-    public List<Meter> getMeters() {
-        return meters;
+    public Meter getMeter() {
+        return meter;
     }
 
     public List<Fraction> getFractions() {
@@ -52,8 +51,8 @@ public class Profile {
         this.name = name;
     }
 
-    public void setMeters(List<Meter> meters) {
-        this.meters = meters;
+    public void setMeter(Meter meter) {
+        this.meter = meter;
     }
 
     public void setFractions(List<Fraction> fractions) {
@@ -63,7 +62,7 @@ public class Profile {
     public Profile(Builder builder) {
         this.id = builder.id;
         this.name = builder.name;
-        this.meters = builder.meters;
+        this.meter = builder.meter;
         this.fractions = builder.fractions;
     }
 
@@ -73,7 +72,7 @@ public class Profile {
 
         private String name;
 
-        private List<Meter> meters;
+        private Meter meter;
 
         private List<Fraction> fractions;
 
@@ -91,8 +90,8 @@ public class Profile {
             return this;
         }
 
-        public Builder meters(List<Meter> meters) {
-            this.meters = meters;
+        public Builder meter(Meter meter) {
+            this.meter = meter;
             return this;
         }
 
@@ -112,7 +111,7 @@ public class Profile {
         return "Profile{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", meters=" + meters +
+                ", meter=" + meter +
                 ", fractions=" + fractions +
                 '}';
     }

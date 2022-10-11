@@ -6,6 +6,8 @@ import com.transformservice.domain.dto.UploadProfileDto;
 import com.transformservice.domain.entity.Fraction;
 import com.transformservice.domain.entity.Meter;
 import com.transformservice.domain.entity.Profile;
+import com.transformservice.domain.entity.Reading;
+import com.transformservice.exception.DataNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,60 +42,117 @@ public class TransformService {
 
     private final FractionService fractionService;
 
+    private final ReadingService readingService;
+
     Logger log = LoggerFactory.getLogger(TransformService.class);
 
     @Autowired
-    public TransformService(ProfileService profileService, MeterService meterService, FractionService fractionService) {
+    public TransformService(ProfileService profileService,
+                            MeterService meterService,
+                            FractionService fractionService,
+                            ReadingService readingService) {
         this.profileService = profileService;
         this.meterService = meterService;
         this.fractionService = fractionService;
+        this.readingService = readingService;
     }
 
+    /**
+     * Read, parse and save Meters, Fractions and Profiles
+     */
     @EventListener(ApplicationReadyEvent.class)
     public void proceed() throws IOException {
         List<Profile> profiles = parseAndCreateProfiles();
+
         Map<String, Profile> profilesMap = profiles.stream().collect(Collectors.toMap(Profile::getName, Function.identity()));
-        parseAndSaveMeters(profilesMap);
-        parseAndSaveFractions(profilesMap);
+        List<Meter> meters = parseAndCreateMeters(profilesMap);
+        parseAndCreateFractions(profilesMap);
+
+        Map<String, Meter> metersMap = meters.stream().collect(Collectors.toMap(Meter::getMeterIdentifier, Function.identity()));
+        parseAndCreateReadings(metersMap);
     }
 
     private List<Profile> parseAndCreateProfiles() throws IOException {
-        List<UploadMeterReadingDto> uploadMeterReadings = loadDistinctUploadProfiles();
+        List<UploadProfileDto> uploadMeterReadings = loadDistinctUploadProfiles();
         List<Profile> profiles = new ArrayList<>();
 
-        uploadMeterReadings.forEach(p -> {
-            profiles.add(profileService.create(Profile.Builder.newInstance()
-                    .name(p.getProfile())
-                    .build()));
-        });
+        uploadMeterReadings.forEach(p -> profiles.add(profileService.create(Profile.Builder.newInstance()
+                .name(p.getProfile())
+                .build())));
 
         return profiles;
     }
 
-    private void parseAndSaveMeters(Map<String, Profile> profiles) throws IOException {
-        List<UploadMeterReadingDto> readingDtos = loadUploadMeterReadings();
+    private List<Meter> parseAndCreateMeters(Map<String, Profile> profiles) throws IOException {
+        List<UploadMeterReadingDto> readingDtos = loadDistinctUploadMeterReadings();
+        List<Meter> meters = new ArrayList<>();
 
         readingDtos.forEach(mr -> {
-            meterService.create(Meter.Builder.newInstance()
+            Profile profile;
+
+            try {
+                profile = profiles.get(mr.getProfile());
+            } catch (NullPointerException e) {
+                throw new DataNotFoundException(String.format("Profile with name: %s not found.", mr.getProfile()));
+            }
+
+            meters.add(meterService.create(Meter.Builder.newInstance()
                     .meterIdentifier(mr.getMeterIdentifier())
-                    .profile(profiles.get(mr.getProfile()))
-                    .build());
+                    .profile(profile)
+                    .build()));
         });
+
+        return meters;
     }
 
-    private void parseAndSaveFractions(Map<String, Profile> profilesMap) throws IOException {
+    private void parseAndCreateFractions(Map<String, Profile> profiles) throws IOException {
         List<UploadProfileDto> profileDtos = loadUploadProfiles();
 
         profileDtos.forEach( p -> {
+            Profile profile;
+
+            try {
+                profile = profiles.get(p.getProfile());
+            } catch (NullPointerException e) {
+                throw new DataNotFoundException(String.format("Profile with name: %s not found.", p.getProfile()));
+            }
+
             fractionService.create(Fraction.Builder.newInstance()
                     .month(p.getMonth())
                     .value(p.getFraction())
-                    .profile(profilesMap.get(p.getProfile()))
+                    .profile(profile)
                     .build());
         });
     }
 
-    private List<UploadMeterReadingDto> loadDistinctUploadProfiles() throws IOException {
+    private void parseAndCreateReadings(Map<String, Meter> meters) throws IOException {
+        List<UploadMeterReadingDto> readingDtos = loadUploadMeterReadings();
+
+        readingDtos.forEach(mr -> {
+            readingService.create(Reading.Builder.newInstance()
+                    .meter(meters.get(mr.getMeterIdentifier()))
+                            .month(mr.getMonth())
+                            .value(mr.getMeterReading())
+                    .build());
+        });
+    }
+
+    private List<UploadProfileDto> loadDistinctUploadProfiles() throws IOException {
+        List<UploadProfileDto> uploadMeterReadings = loadUploadProfiles();
+
+        return uploadMeterReadings.stream()
+                .filter(distinctByKey(UploadProfileDto::getProfile))
+                .collect(Collectors.toList());
+    }
+
+    private List<UploadProfileDto> loadUploadProfiles() throws IOException {
+        return new CsvToBeanBuilder(new FileReader(csvFilePath + profilesFileName))
+                .withType(UploadProfileDto.class)
+                .build()
+                .parse();
+    }
+
+    private List<UploadMeterReadingDto> loadDistinctUploadMeterReadings() throws IOException {
         List<UploadMeterReadingDto> uploadMeterReadings = loadUploadMeterReadings();
 
         return uploadMeterReadings.stream()
@@ -108,14 +167,7 @@ public class TransformService {
                 .parse();
     }
 
-    private List<UploadProfileDto> loadUploadProfiles() throws IOException {
-        return new CsvToBeanBuilder(new FileReader(csvFilePath + profilesFileName))
-                .withType(UploadProfileDto.class)
-                .build()
-                .parse();
-    }
-
-    private static <T> Predicate<T> distinctByKey(Function<? super T, Object> keyExtractor)
+    private <T> Predicate<T> distinctByKey(Function<? super T, Object> keyExtractor)
     {
         Map<Object, Boolean> map = new ConcurrentHashMap<>();
         return t -> map.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;

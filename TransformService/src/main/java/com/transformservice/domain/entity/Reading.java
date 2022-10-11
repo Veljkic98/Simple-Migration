@@ -3,8 +3,8 @@ package com.transformservice.domain.entity;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "fraction")
-public class Fraction {
+@Table(name = "reading")
+public class Reading {
 
     @Id
     @Column
@@ -15,21 +15,21 @@ public class Fraction {
     private String month;
 
     @Column(name = "`value`", nullable = false)
-    private Double value;
+    private Integer value;
 
     @ManyToOne
-    @JoinColumn(name = "profile_id", nullable = false)
-    private Profile profile;
+    @JoinColumn(name = "meter_id")
+    private Meter meter;
 
-    public Fraction() {
+    public Reading() {
         // empty constructor
     }
 
-    public Fraction(Builder builder) {
+    public Reading(Builder builder) {
         this.id = builder.id;
         this.month = builder.month;
         this.value = builder.value;
-        this.profile = builder.profile;
+        this.meter = builder.meter;
     }
 
     // get
@@ -42,12 +42,12 @@ public class Fraction {
         return month;
     }
 
-    public Double getValue() {
+    public Integer getValue() {
         return value;
     }
 
-    public Profile getProfile() {
-        return profile;
+    public Meter getMeter() {
+        return meter;
     }
 
     // set
@@ -60,12 +60,12 @@ public class Fraction {
         this.month = month;
     }
 
-    public void setValue(Double value) {
+    public void setValue(Integer value) {
         this.value = value;
     }
 
-    public void setProfile(Profile profile) {
-        this.profile = profile;
+    public void setMeter(Meter meter) {
+        this.meter = meter;
     }
 
     public static class Builder {
@@ -74,9 +74,9 @@ public class Fraction {
 
         private String month;
 
-        private Double value;
+        private Integer value;
 
-        private Profile profile;
+        private Meter meter;
 
         public static Builder newInstance() {
             return new Builder();
@@ -92,29 +92,30 @@ public class Fraction {
             return this;
         }
 
-        public Builder value(Double value) {
+        public Builder value(Integer value) {
             this.value = value;
             return this;
         }
 
-        public Builder profile(Profile profile) {
-            this.profile = profile;
+        public Builder meter(Meter meter) {
+            this.meter = meter;
             return this;
         }
 
-        public Fraction build() {
-            return new Fraction(this);
+        public Reading build() {
+            return new Reading(this);
         }
 
     }
 
     @Override
     public String toString() {
-        return "Fraction{" +
+        return "Reading{" +
                 "id=" + id +
                 ", month='" + month + '\'' +
                 ", value=" + value +
-                ", profile=" + profile +
+                ", meter=" + meter +
                 '}';
     }
+
 }
