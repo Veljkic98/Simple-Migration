@@ -39,8 +39,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
     @ExceptionHandler(value = { DataNotFoundException.class })
     protected ResponseEntity<Object> handleNotFound(final DataNotFoundException ex, final WebRequest request) {
-        final String bodyOfResponse = "Some of fields missing.";
-        return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+        return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
 
     @ExceptionHandler(value = { ColumnDataMissingException.class })

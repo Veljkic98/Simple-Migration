@@ -1,31 +1,22 @@
-package com.transformservice.domain.entity;
+package com.transformservice.domain.dto;
 
-import javax.persistence.*;
+import com.transformservice.domain.entity.Meter;
 
-@Entity
-@Table(name = "reading")
-public class Reading {
+public class ReadingDto {
 
-    @Id
-    @Column
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "`month`", nullable = false)
     private String month;
 
-    @Column(name = "`value`", nullable = false)
     private Integer value;
 
-    @ManyToOne
-    @JoinColumn(name = "meter_id", nullable = false)
     private Meter meter;
 
-    public Reading() {
+    public ReadingDto() {
         // empty constructor
     }
 
-    public Reading(Builder builder) {
+    public ReadingDto(Builder builder) {
         this.id = builder.id;
         this.month = builder.month;
         this.value = builder.value;
@@ -102,20 +93,10 @@ public class Reading {
             return this;
         }
 
-        public Reading build() {
-            return new Reading(this);
+        public ReadingDto build() {
+            return new ReadingDto(this);
         }
 
-    }
-
-    @Override
-    public String toString() {
-        return "Reading{" +
-                "id=" + id +
-                ", month='" + month + '\'' +
-                ", value=" + value +
-                ", meter=" + meter +
-                '}';
     }
 
 }

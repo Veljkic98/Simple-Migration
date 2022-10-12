@@ -3,7 +3,6 @@ package com.transformservice.domain.entity;
 import javax.persistence.*;
 import java.util.List;
 
-//todo: delete commented lines
 @Entity
 @Table(name = "profile")
 public class Profile {
@@ -16,11 +15,10 @@ public class Profile {
     @Column(nullable = false, unique = true)
     private String name;
 
-    @OneToOne(mappedBy = "profile")
-    private Meter meter;
+    @OneToMany(mappedBy = "profile")
+    private List<Meter> meters;
 
     @OneToMany(mappedBy = "profile")
-//    @JoinColumn(name = "fraction_id")
     private List<Fraction> fractions;
 
     public Profile() {
@@ -35,8 +33,8 @@ public class Profile {
         return name;
     }
 
-    public Meter getMeter() {
-        return meter;
+    public List<Meter> getMeters() {
+        return meters;
     }
 
     public List<Fraction> getFractions() {
@@ -51,8 +49,8 @@ public class Profile {
         this.name = name;
     }
 
-    public void setMeter(Meter meter) {
-        this.meter = meter;
+    public void setMeters(List<Meter> meters) {
+        this.meters = meters;
     }
 
     public void setFractions(List<Fraction> fractions) {
@@ -62,7 +60,7 @@ public class Profile {
     public Profile(Builder builder) {
         this.id = builder.id;
         this.name = builder.name;
-        this.meter = builder.meter;
+        this.meters = builder.meters;
         this.fractions = builder.fractions;
     }
 
@@ -72,7 +70,7 @@ public class Profile {
 
         private String name;
 
-        private Meter meter;
+        private List<Meter> meters;
 
         private List<Fraction> fractions;
 
@@ -90,8 +88,8 @@ public class Profile {
             return this;
         }
 
-        public Builder meter(Meter meter) {
-            this.meter = meter;
+        public Builder meters(List<Meter> meters) {
+            this.meters = meters;
             return this;
         }
 
@@ -111,7 +109,7 @@ public class Profile {
         return "Profile{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", meter=" + meter +
+                ", meters=" + meters.size() +
                 ", fractions=" + fractions +
                 '}';
     }

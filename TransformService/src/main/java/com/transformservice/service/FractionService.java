@@ -1,23 +1,23 @@
 package com.transformservice.service;
 
+import com.transformservice.domain.dto.FractionDto;
+import com.transformservice.domain.dto.FractionsDto;
 import com.transformservice.domain.entity.Fraction;
-import com.transformservice.repository.FractionRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.stereotype.Service;
 
-@Service
-public class FractionService {
+import java.util.List;
 
-    private final FractionRepository fractionRepository;
+public interface FractionService {
 
-    @Autowired
-    public FractionService(FractionRepository fractionRepository) {
-        this.fractionRepository = fractionRepository;
-    }
+    List<Fraction> getAllByProfile(Long profileId);
 
-    public Fraction create(Fraction fraction) throws DataIntegrityViolationException {
-        return fractionRepository.save(fraction);
-    }
+    Fraction getById(Long profileId, Long fractionId);
+
+    Fraction createForOneMonth(Long profileId, FractionDto fractionDto);
+
+    Fraction createForOneMonth(Long profileId, FractionsDto fractionsDto);
+
+    Fraction update(Long profileId, Long fractionId, FractionDto fractionDto);
+
+    void delete(Long profileId, Long fractionId);
 
 }

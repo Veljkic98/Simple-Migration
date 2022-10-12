@@ -5,7 +5,6 @@ import java.util.List;
 
 @Entity
 @Table(name = "meter")
-//todo: staviti da profile.name i month budu unique
 public class Meter {
 
     @Id
@@ -13,13 +12,13 @@ public class Meter {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "meter_identifier", nullable = false)
+    @Column(name = "meter_identifier", nullable = false, unique = true)
     private String meterIdentifier;
 
-    @OneToMany(mappedBy = "meter")
+    @OneToMany(mappedBy = "meter", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Reading> readings;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "profile_id", nullable = false)
     private Profile profile;
 
@@ -115,8 +114,8 @@ public class Meter {
         return "Meter{" +
                 "id=" + id +
                 ", meterIdentifier='" + meterIdentifier + '\'' +
-                ", readings=" + readings +
-                ", profile=" + profile +
+//                ", readings=" + readings +
+//                ", profile=" + profile +
                 '}';
     }
 

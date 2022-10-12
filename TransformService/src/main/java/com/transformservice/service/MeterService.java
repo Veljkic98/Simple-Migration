@@ -1,28 +1,20 @@
 package com.transformservice.service;
 
+import com.transformservice.domain.dto.MeterDto;
 import com.transformservice.domain.entity.Meter;
-import com.transformservice.repository.MeterRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
-public class MeterService {
+public interface MeterService {
 
-    private final MeterRepository meterRepository;
+    List<Meter> getAllByProfile(Long profileId);
 
-    @Autowired
-    public MeterService(MeterRepository meterRepository) {
-        this.meterRepository = meterRepository;
-    }
+    Meter getById(Long profileId, Long meterId);
 
-    public Meter create(Meter meter) throws DataIntegrityViolationException {
-        return meterRepository.save(meter);
-    }
+    Meter create(Long profileId, MeterDto meterDto);
 
-    public List<Meter> getAll() {
-        return meterRepository.findAll();
-    }
+    Meter update(Long profileId, Long meterId, MeterDto meterDto);
+
+    void delete(Long profileId, Long meterId);
+
 }
