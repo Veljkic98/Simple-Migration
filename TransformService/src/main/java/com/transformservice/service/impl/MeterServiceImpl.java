@@ -1,4 +1,4 @@
-package com.transformservice.repository.impl;
+package com.transformservice.service.impl;
 
 import com.transformservice.domain.dto.MeterDto;
 import com.transformservice.domain.entity.Meter;
