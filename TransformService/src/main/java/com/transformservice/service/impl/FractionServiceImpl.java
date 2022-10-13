@@ -3,13 +3,16 @@ package com.transformservice.service.impl;
 import com.transformservice.domain.dto.FractionsDto;
 import com.transformservice.domain.entity.Fraction;
 import com.transformservice.domain.entity.Profile;
+import com.transformservice.exception.DataMissingException;
 import com.transformservice.exception.DataNotFoundException;
+import com.transformservice.exception.InvalidDataException;
 import com.transformservice.repository.FractionRepository;
 import com.transformservice.service.FractionService;
 import com.transformservice.service.ProfileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -61,6 +64,11 @@ public class FractionServiceImpl implements FractionService {
 
     @Override
     public List<Fraction> create(Long profileId, FractionsDto fractionsDto) {
+        if (fractionsDto.isAnyFieldNull()) {
+            log.warn("Fractions by all 12 months must not be null.");
+            throw new DataMissingException("Fractions by all 12 months must not be null.");
+        }
+
         Profile profile = profileService.getById(profileId);
 
         List<Fraction> fractions = createFractions(fractionsDto, profile);
@@ -70,6 +78,11 @@ public class FractionServiceImpl implements FractionService {
 
     @Override
     public List<Fraction> update(Long profileId, FractionsDto fractionsDto) {
+        if (fractionsDto.isAnyFieldNull()) {
+            log.warn("Fractions by all 12 months must not be null.");
+            throw new DataMissingException("Fractions by all 12 months must not be null.");
+        }
+
         List<Fraction> fractions = getAllByProfile(profileId);
 
         updateFractions(fractions, fractionsDto);
@@ -102,7 +115,22 @@ public class FractionServiceImpl implements FractionService {
         fractions.add(createFraction(months.get(10), fractionsDto.getNovFraction(), profile));
         fractions.add(createFraction(months.get(11), fractionsDto.getDecFraction(), profile));
 
+        if (!fractionsEqualsOne(fractions)) {
+            log.warn("Sum of all fractions must be 1.");
+            throw new InvalidDataException("Sum of all fractions must be 1.");
+        }
+
         return fractions;
+    }
+
+    private boolean fractionsEqualsOne(List<Fraction> fractions) {
+        double sum = 0.0;
+
+        for (Fraction f : fractions) {
+            sum += f.getValue();
+        }
+
+        return sum == 1.0;
     }
 
     private void updateFractions(List<Fraction> fractions, FractionsDto fractionsDto) {

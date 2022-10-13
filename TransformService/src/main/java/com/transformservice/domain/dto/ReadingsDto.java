@@ -1,18 +1,45 @@
 package com.transformservice.domain.dto;
 
+import javax.validation.constraints.NotNull;
+import java.util.Objects;
+import java.util.stream.Stream;
+
 public class ReadingsDto {
 
+    @NotNull
     private Integer janReading;
+
+    @NotNull
     private Integer febReading;
+
+    @NotNull
     private Integer marReading;
+
+    @NotNull
     private Integer aprReading;
+
+    @NotNull
     private Integer mayReading;
+
+    @NotNull
     private Integer junReading;
+
+    @NotNull
     private Integer julReading;
+
+    @NotNull
     private Integer avgReading;
+
+    @NotNull
     private Integer sepReading;
+
+    @NotNull
     private Integer octReading;
+
+    @NotNull
     private Integer novReading;
+
+    @NotNull
     private Integer decReading;
 
     public ReadingsDto() {
@@ -117,6 +144,12 @@ public class ReadingsDto {
 
     public void setDecReading(Integer decReading) {
         this.decReading = decReading;
+    }
+
+    public boolean isAnyFieldNull() {
+        return Stream.of(decReading, decReading, decReading, decReading, decReading, decReading,
+                        decReading, decReading, decReading, decReading, decReading, decReading)
+                .anyMatch(Objects::isNull);
     }
 
 }

@@ -1,6 +1,8 @@
 package com.transformservice.domain.dto;
 
 import javax.validation.constraints.NotNull;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 public class FractionsDto {
 
@@ -142,6 +144,12 @@ public class FractionsDto {
 
     public void setDecFraction(Double decFraction) {
         this.decFraction = decFraction;
+    }
+
+    public boolean isAnyFieldNull() {
+        return Stream.of(janFraction, febFraction, marFraction, aprFraction, mayFraction, junFraction,
+                        julFraction, avgFraction, sepFraction, octFraction, novFraction, decFraction)
+                .anyMatch(Objects::isNull);
     }
 
 }

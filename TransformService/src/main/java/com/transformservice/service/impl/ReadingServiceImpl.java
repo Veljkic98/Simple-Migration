@@ -3,12 +3,15 @@ package com.transformservice.service.impl;
 import com.transformservice.domain.dto.ReadingsDto;
 import com.transformservice.domain.entity.Fraction;
 import com.transformservice.domain.entity.Meter;
-import com.transformservice.domain.entity.Profile;
 import com.transformservice.domain.entity.Reading;
+import com.transformservice.exception.DataMissingException;
+import com.transformservice.exception.InvalidDataException;
 import com.transformservice.repository.ReadingRepository;
+import com.transformservice.service.FractionService;
 import com.transformservice.service.MeterService;
-import com.transformservice.service.ProfileService;
 import com.transformservice.service.ReadingService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,11 +28,17 @@ public class ReadingServiceImpl implements ReadingService {
 
     private final MeterService meterService;
 
+    private final FractionService fractionService;
+
+    Logger log = LoggerFactory.getLogger(ReadingServiceImpl.class);
+
     @Autowired
     public ReadingServiceImpl(ReadingRepository readingRepository,
-                              MeterService meterService) {
+                              MeterService meterService,
+                              FractionService fractionService) {
         this.readingRepository = readingRepository;
         this.meterService = meterService;
+        this.fractionService = fractionService;
     }
 
     @Override
@@ -39,16 +48,78 @@ public class ReadingServiceImpl implements ReadingService {
 
     @Override
     public List<Reading> create(Long profileId, Long meterId, ReadingsDto readingsDto) {
+        if (readingsDto.isAnyFieldNull()) {
+            log.warn("Readings by all 12 months must not be null.");
+            throw new DataMissingException("Readings by all 12 months must not be null.");
+        }
+
         Meter meter = meterService.getById(profileId, meterId);
 
         List<Reading> readings = createReadings(meter, readingsDto);
 
+        if (!isReadingsIncreasingByMonths(readings)) {
+            log.warn("Meter readings are not increasing by months for meter with id: {}.", meterId);
+            throw new InvalidDataException(
+                    String.format("Meter readings are not increasing by months for meter with id: %s.", meterId));
+        }
+
+        if (!isMeterReadingProportionalWithFractions(profileId, readings)) {
+            log.warn("Reading for profile with id {} is not proportional with fraction.", profileId);
+            throw new InvalidDataException(
+                    String.format("Reading for profile with id %s is not proportional with fraction.", profileId));
+        }
+
         return readingRepository.saveAll(readings);
+    }
+
+    private boolean isMeterReadingProportionalWithFractions(Long profileId, List<Reading> readings) {
+        List<Fraction> fractions = fractionService.getAllByProfile(profileId);
+
+        double desirableMeterReading = 0;
+        for (int i = 0; i < 12; i++) {
+            Fraction f = fractions.get(i);
+            Reading r = readings.get(i);
+
+            desirableMeterReading += (240 * f.getValue());
+            if (r.getValue() > desirableMeterReading * 1.25 || r.getValue() < desirableMeterReading * 0.75) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private boolean isReadingsIncreasingByMonths(List<Reading> readings) {
+        int meterReading = 0;
+
+        for (Reading p : readings) {
+            if (p.getValue() < meterReading) return false;
+            meterReading = p.getValue();
+        }
+
+        return true;
     }
 
     @Override
     public List<Reading> update(Long profileId, Long meterId, ReadingsDto readingsDto) {
+        if (readingsDto.isAnyFieldNull()) {
+            log.warn("Readings by all 12 months must not be null.");
+            throw new DataMissingException("Readings by all 12 months must not be null.");
+        }
+
         List<Reading> readings = getAll(profileId, meterId);
+
+        if (!isReadingsIncreasingByMonths(readings)) {
+            log.warn("Meter readings are not increasing by months for meter with id: {}.", meterId);
+            throw new InvalidDataException(
+                    String.format("Meter readings are not increasing by months for meter with id: %s.", meterId));
+        }
+
+        if (!isMeterReadingProportionalWithFractions(profileId, readings)) {
+            log.warn("Reading for profile with id {} is not proportional with fraction.", profileId);
+            throw new InvalidDataException(
+                    String.format("Reading for profile with id %s is not proportional with fraction.", profileId));
+        }
 
         updateReadings(readings, readingsDto);
 
