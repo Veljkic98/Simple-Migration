@@ -1,4 +1,4 @@
-package com.transformservice.service.impl;
+package com.transformservice.repository.impl;
 
 import com.transformservice.domain.dto.MeterDto;
 import com.transformservice.domain.entity.Meter;
@@ -41,13 +41,7 @@ public class MeterServiceImpl implements MeterService {
 
     @Override
     public List<Meter> getAllByProfile(Long profileId) {
-        List<Meter> meters = meterRepository.findAllByProfileId(profileId);
-
-        if (meters.isEmpty()) {
-            throw new DataNotFoundException(String.format("Profile with id %s not found.", profileId));
-        }
-
-        return meters;
+        return meterRepository.findAllByProfileId(profileId);
     }
 
     @Override

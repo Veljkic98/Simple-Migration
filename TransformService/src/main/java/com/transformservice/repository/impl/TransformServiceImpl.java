@@ -1,4 +1,4 @@
-package com.transformservice.service.impl;
+package com.transformservice.repository.impl;
 
 import com.opencsv.bean.CsvToBeanBuilder;
 import com.transformservice.domain.dto.*;
@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
@@ -43,7 +44,11 @@ public class TransformServiceImpl {
     }
 
     /**
-     * Read, parse and save Meters, Fractions and Profiles
+     * Read, parse and save Meters, Fractions and Profiles.
+     *
+     * @param fileProfiles
+     * @param fileMeterReadings
+     * @throws IOException
      */
     @Transactional
     public void parse(MultipartFile fileProfiles, MultipartFile fileMeterReadings) throws IOException {
@@ -118,6 +123,8 @@ public class TransformServiceImpl {
             case "OCT" -> fractionsDto.setOctFraction(uploadProfileDto.getFraction());
             case "NOV" -> fractionsDto.setNovFraction(uploadProfileDto.getFraction());
             case "DEC" -> fractionsDto.setDecFraction(uploadProfileDto.getFraction());
+            default -> throw new InvalidDataException(
+                    String.format("Month '%s' for Fractions is not valid.", uploadProfileDto.getMonth().toUpperCase()));
         }
     }
 
@@ -143,21 +150,22 @@ public class TransformServiceImpl {
         return readingsDto;
     }
 
-    private void attachReadingByMonth(ReadingsDto readingsDto, UploadMeterReadingDto mr) {
-        switch (mr.getMonth().toUpperCase()) {
-            case "JAN" -> readingsDto.setJanReading(mr.getMeterReading());
-            case "FEB" -> readingsDto.setFebReading(mr.getMeterReading());
-            case "MAR" -> readingsDto.setMarReading(mr.getMeterReading());
-            case "APR" -> readingsDto.setAprReading(mr.getMeterReading());
-            case "MAY" -> readingsDto.setMayReading(mr.getMeterReading());
-            case "JUN" -> readingsDto.setJunReading(mr.getMeterReading());
-            case "JUL" -> readingsDto.setJulReading(mr.getMeterReading());
-            case "AVG" -> readingsDto.setAvgReading(mr.getMeterReading());
-            case "SEP" -> readingsDto.setSepReading(mr.getMeterReading());
-            case "OCT" -> readingsDto.setOctReading(mr.getMeterReading());
-            case "NOV" -> readingsDto.setNovReading(mr.getMeterReading());
-            case "DEC" -> readingsDto.setDecReading(mr.getMeterReading());
-            default -> throw new InvalidDataException("");
+    private void attachReadingByMonth(ReadingsDto readingsDto, UploadMeterReadingDto uploadMeterReadingDto) {
+        switch (uploadMeterReadingDto.getMonth().toUpperCase()) {
+            case "JAN" -> readingsDto.setJanReading(uploadMeterReadingDto.getMeterReading());
+            case "FEB" -> readingsDto.setFebReading(uploadMeterReadingDto.getMeterReading());
+            case "MAR" -> readingsDto.setMarReading(uploadMeterReadingDto.getMeterReading());
+            case "APR" -> readingsDto.setAprReading(uploadMeterReadingDto.getMeterReading());
+            case "MAY" -> readingsDto.setMayReading(uploadMeterReadingDto.getMeterReading());
+            case "JUN" -> readingsDto.setJunReading(uploadMeterReadingDto.getMeterReading());
+            case "JUL" -> readingsDto.setJulReading(uploadMeterReadingDto.getMeterReading());
+            case "AVG" -> readingsDto.setAvgReading(uploadMeterReadingDto.getMeterReading());
+            case "SEP" -> readingsDto.setSepReading(uploadMeterReadingDto.getMeterReading());
+            case "OCT" -> readingsDto.setOctReading(uploadMeterReadingDto.getMeterReading());
+            case "NOV" -> readingsDto.setNovReading(uploadMeterReadingDto.getMeterReading());
+            case "DEC" -> readingsDto.setDecReading(uploadMeterReadingDto.getMeterReading());
+            default -> throw new InvalidDataException(
+                    String.format("Month '%s' for Reading is not valid.", uploadMeterReadingDto.getMonth().toUpperCase()));
         }
     }
 
@@ -171,7 +179,7 @@ public class TransformServiceImpl {
 
     private List<UploadProfileDto> loadUploadProfiles(MultipartFile file) throws IOException {
         BufferedReader fileReader = new BufferedReader(new
-                InputStreamReader(file.getInputStream(), "UTF-8"));
+                InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8));
         return new CsvToBeanBuilder<UploadProfileDto>(fileReader)
                 .withType(UploadProfileDto.class)
                 .build()
@@ -188,9 +196,9 @@ public class TransformServiceImpl {
 
     private List<UploadMeterReadingDto> loadUploadMeterReadings(MultipartFile file) throws IOException {
         BufferedReader fileReader = new BufferedReader(new
-                InputStreamReader(file.getInputStream(), "UTF-8"));
+                InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8));
 
-        return new CsvToBeanBuilder(fileReader)
+        return new CsvToBeanBuilder<UploadMeterReadingDto>(fileReader)
                 .withType(UploadMeterReadingDto.class)
                 .build()
                 .parse();

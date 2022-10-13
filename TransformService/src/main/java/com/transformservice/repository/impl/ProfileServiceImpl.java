@@ -1,4 +1,4 @@
-package com.transformservice.service.impl;
+package com.transformservice.repository.impl;
 
 import com.transformservice.domain.dto.ProfileDto;
 import com.transformservice.domain.entity.Profile;

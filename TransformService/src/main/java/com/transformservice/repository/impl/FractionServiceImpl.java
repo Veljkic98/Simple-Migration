@@ -1,4 +1,4 @@
-package com.transformservice.service.impl;
+package com.transformservice.repository.impl;
 
 import com.transformservice.domain.dto.FractionsDto;
 import com.transformservice.domain.entity.Fraction;
@@ -47,13 +47,7 @@ public class FractionServiceImpl implements FractionService {
 
     @Override
     public List<Fraction> getAllByProfile(Long profileId) {
-        List<Fraction> fractions = fractionRepository.findAllByProfileId(profileId);
-
-        if (fractions.isEmpty()) {
-            throw new DataNotFoundException(String.format("Profile with id %s not found.", profileId));
-        }
-
-        return fractions;
+        return fractionRepository.findAllByProfileId(profileId);
     }
 
     @Override
