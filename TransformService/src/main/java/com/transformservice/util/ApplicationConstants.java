@@ -41,4 +41,8 @@ public class ApplicationConstants {
                 { 11, "DEC", }
         }).collect(Collectors.toMap(data -> (Integer) data[0], data -> (String) data[1]));
     }
+
+    /** e.g. Fri Feb 23 14:37:37 CET 2018 */
+    public static final String DATE_PATTERN = "EEE MMM dd HH:mm:ss zzz yyyy";
+
 }

@@ -14,7 +14,7 @@ import java.io.IOException;
 @RestController
 public class TransformController {
 
-    private TransformServiceImpl transformService;
+    private final TransformServiceImpl transformService;
 
     @Autowired
     public TransformController(TransformServiceImpl transformService) {

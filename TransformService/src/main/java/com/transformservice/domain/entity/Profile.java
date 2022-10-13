@@ -104,13 +104,4 @@ public class Profile {
 
     }
 
-    @Override
-    public String toString() {
-        return "Profile{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", meters=" + meters.size() +
-                ", fractions=" + fractions +
-                '}';
-    }
 }

@@ -1,6 +1,6 @@
 package com.transformservice.controller;
 
-import com.transformservice.converter.MeterConverter;
+import com.transformservice.mapper.MeterMapper;
 import com.transformservice.domain.dto.MeterDto;
 import com.transformservice.service.MeterService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "profile/{profileId}/meter")
+@RequestMapping(path = "/profile/{profileId}/meter")
 public class MeterController {
 
     private final MeterService meterService;
@@ -26,7 +26,7 @@ public class MeterController {
     public ResponseEntity<List<MeterDto>> getAllByProfile(@PathVariable Long profileId) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(MeterConverter.toDtoList(meterService.getAllByProfile(profileId)));
+                .body(MeterMapper.toDtoList(meterService.getAllByProfile(profileId)));
     }
 
     @PostMapping
@@ -34,7 +34,7 @@ public class MeterController {
                                            @RequestBody @Validated MeterDto meterDto) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(MeterConverter.toDto(meterService.create(profileId, meterDto)));
+                .body(MeterMapper.toDto(meterService.create(profileId, meterDto)));
     }
 
     @PutMapping(path = "/{meterId}")
@@ -43,7 +43,7 @@ public class MeterController {
                                             @RequestBody MeterDto meterDto) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(MeterConverter.toDto(meterService.update(profileId, meterId, meterDto)));
+                .body(MeterMapper.toDto(meterService.update(profileId, meterId, meterDto)));
     }
 
     @DeleteMapping(path = "/{meterId}")
@@ -55,6 +55,5 @@ public class MeterController {
                 .status(HttpStatus.NO_CONTENT)
                 .build();
     }
-
 
 }

@@ -1,4 +1,4 @@
-package com.transformservice.converter;
+package com.transformservice.mapper;
 
 import com.transformservice.domain.dto.MeterDto;
 import com.transformservice.domain.entity.Meter;
@@ -6,9 +6,9 @@ import com.transformservice.domain.entity.Meter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MeterConverter {
+public class MeterMapper {
 
-    private MeterConverter() {
+    private MeterMapper() {
     }
 
     public static MeterDto toDto(Meter meter) {

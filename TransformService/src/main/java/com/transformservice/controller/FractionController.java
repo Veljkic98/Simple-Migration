@@ -1,10 +1,8 @@
 package com.transformservice.controller;
 
-import com.transformservice.converter.FractionConverter;
-import com.transformservice.converter.MeterConverter;
+import com.transformservice.mapper.FractionMapper;
 import com.transformservice.domain.dto.FractionDto;
 import com.transformservice.domain.dto.FractionsDto;
-import com.transformservice.domain.dto.MeterDto;
 import com.transformservice.service.FractionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "profile/{profileId}/fraction")
+@RequestMapping(path = "/profile/{profileId}/fraction")
 public class FractionController {
 
     private final FractionService fractionService;
@@ -29,7 +27,7 @@ public class FractionController {
     public ResponseEntity<List<FractionDto>> getAllByProfile(@PathVariable Long profileId) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(FractionConverter.toDtoList(fractionService.getAllByProfile(profileId)));
+                .body(FractionMapper.toDtoList(fractionService.getAllByProfile(profileId)));
     }
 
     @GetMapping(path = "/{fractionId}")
@@ -37,16 +35,15 @@ public class FractionController {
                                                @PathVariable Long fractionId) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(FractionConverter.toDto(fractionService.getById(profileId, fractionId)));
+                .body(FractionMapper.toDto(fractionService.getById(profileId, fractionId)));
     }
 
     @PostMapping
-    //todo: test when create controller for profile
     public ResponseEntity<List<FractionDto>> create(@PathVariable Long profileId,
                                                     @RequestBody @Validated FractionsDto fractionsDto) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(FractionConverter.toDtoList(fractionService.create(profileId, fractionsDto)));
+                .body(FractionMapper.toDtoList(fractionService.create(profileId, fractionsDto)));
     }
 
     @PutMapping
@@ -54,7 +51,7 @@ public class FractionController {
                                            @RequestBody FractionsDto fractionsDto) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(FractionConverter.toDtoList(fractionService.update(profileId, fractionsDto)));
+                .body(FractionMapper.toDtoList(fractionService.update(profileId, fractionsDto)));
     }
 
     @DeleteMapping

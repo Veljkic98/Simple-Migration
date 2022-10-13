@@ -104,14 +104,4 @@ public class UploadMeterReadingDto {
 
     }
 
-    //todo delete
-    @Override
-    public String toString() {
-        return "UploadMeterReadingDto{" +
-                "meterIdentifier='" + meterIdentifier + '\'' +
-                ", profile='" + profile + '\'' +
-                ", month='" + month + '\'' +
-                ", meterReading=" + meterReading +
-                '}';
-    }
 }

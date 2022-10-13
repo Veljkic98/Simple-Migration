@@ -109,14 +109,4 @@ public class Meter {
 
     }
 
-    @Override
-    public String toString() {
-        return "Meter{" +
-                "id=" + id +
-                ", meterIdentifier='" + meterIdentifier + '\'' +
-//                ", readings=" + readings +
-//                ", profile=" + profile +
-                '}';
-    }
-
 }

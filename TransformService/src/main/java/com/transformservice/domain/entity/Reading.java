@@ -108,14 +108,4 @@ public class Reading {
 
     }
 
-    @Override
-    public String toString() {
-        return "Reading{" +
-                "id=" + id +
-                ", month='" + month + '\'' +
-                ", value=" + value +
-                ", meter=" + meter +
-                '}';
-    }
-
 }

@@ -24,13 +24,15 @@ import static com.transformservice.util.ApplicationConstants.createMapOfMonths;
 @Service
 public class ReadingServiceImpl implements ReadingService {
 
+    private static final String INVALID_PROFILE_ERROR_MESSAGE = "Readings by all 12 months must not be null.";
+
     private final ReadingRepository readingRepository;
 
     private final MeterService meterService;
 
     private final FractionService fractionService;
 
-    Logger log = LoggerFactory.getLogger(ReadingServiceImpl.class);
+    private final Logger log = LoggerFactory.getLogger(ReadingServiceImpl.class);
 
     @Autowired
     public ReadingServiceImpl(ReadingRepository readingRepository,
@@ -57,6 +59,12 @@ public class ReadingServiceImpl implements ReadingService {
 
         List<Reading> readings = createReadings(meter, readingsDto);
 
+        roga(profileId, meterId, readings);
+
+        return readingRepository.saveAll(readings);
+    }
+
+    private void roga(Long profileId, Long meterId, List<Reading> readings) {
         if (!isReadingsIncreasingByMonths(readings)) {
             log.warn("Meter readings are not increasing by months for meter with id: {}.", meterId);
             throw new InvalidDataException(
@@ -68,8 +76,6 @@ public class ReadingServiceImpl implements ReadingService {
             throw new InvalidDataException(
                     String.format("Reading for profile with id %s is not proportional with fraction.", profileId));
         }
-
-        return readingRepository.saveAll(readings);
     }
 
     private boolean isMeterReadingProportionalWithFractions(Long profileId, List<Reading> readings) {
@@ -109,17 +115,7 @@ public class ReadingServiceImpl implements ReadingService {
 
         List<Reading> readings = getAll(profileId, meterId);
 
-        if (!isReadingsIncreasingByMonths(readings)) {
-            log.warn("Meter readings are not increasing by months for meter with id: {}.", meterId);
-            throw new InvalidDataException(
-                    String.format("Meter readings are not increasing by months for meter with id: %s.", meterId));
-        }
-
-        if (!isMeterReadingProportionalWithFractions(profileId, readings)) {
-            log.warn("Reading for profile with id {} is not proportional with fraction.", profileId);
-            throw new InvalidDataException(
-                    String.format("Reading for profile with id %s is not proportional with fraction.", profileId));
-        }
+        roga(profileId, meterId, readings);
 
         updateReadings(readings, readingsDto);
 

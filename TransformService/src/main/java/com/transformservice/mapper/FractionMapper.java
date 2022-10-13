@@ -1,4 +1,4 @@
-package com.transformservice.converter;
+package com.transformservice.mapper;
 
 import com.transformservice.domain.dto.FractionDto;
 import com.transformservice.domain.entity.Fraction;
@@ -6,9 +6,9 @@ import com.transformservice.domain.entity.Fraction;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FractionConverter {
+public class FractionMapper {
 
-    private FractionConverter() {
+    private FractionMapper() {
     }
     public static List<FractionDto> toDtoList(List<Fraction> fractions) {
         List<FractionDto> fractionDtos = new ArrayList<>();

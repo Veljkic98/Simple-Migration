@@ -1,4 +1,4 @@
-package com.transformservice.converter;
+package com.transformservice.mapper;
 
 import com.transformservice.domain.dto.ProfileDto;
 import com.transformservice.domain.entity.Profile;
@@ -6,7 +6,7 @@ import com.transformservice.domain.entity.Profile;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProfileConverter {
+public class ProfileMapper {
 
     public static ProfileDto toDto(Profile profile) {
         return ProfileDto.Builder.newInstance()

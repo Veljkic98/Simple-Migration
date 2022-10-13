@@ -4,6 +4,7 @@ import com.opencsv.bean.CsvToBeanBuilder;
 import com.transformservice.domain.dto.*;
 import com.transformservice.domain.entity.Meter;
 import com.transformservice.domain.entity.Profile;
+import com.transformservice.exception.InvalidDataException;
 import com.transformservice.service.FractionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -156,6 +157,7 @@ public class TransformServiceImpl {
             case "OCT" -> readingsDto.setOctReading(mr.getMeterReading());
             case "NOV" -> readingsDto.setNovReading(mr.getMeterReading());
             case "DEC" -> readingsDto.setDecReading(mr.getMeterReading());
+            default -> throw new InvalidDataException("");
         }
     }
 
@@ -170,7 +172,7 @@ public class TransformServiceImpl {
     private List<UploadProfileDto> loadUploadProfiles(MultipartFile file) throws IOException {
         BufferedReader fileReader = new BufferedReader(new
                 InputStreamReader(file.getInputStream(), "UTF-8"));
-        return new CsvToBeanBuilder(fileReader)
+        return new CsvToBeanBuilder<UploadProfileDto>(fileReader)
                 .withType(UploadProfileDto.class)
                 .build()
                 .parse();

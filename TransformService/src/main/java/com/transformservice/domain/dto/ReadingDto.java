@@ -1,7 +1,5 @@
 package com.transformservice.domain.dto;
 
-import com.transformservice.domain.entity.Meter;
-
 public class ReadingDto {
 
     private Long id;

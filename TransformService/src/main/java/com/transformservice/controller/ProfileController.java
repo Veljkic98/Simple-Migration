@@ -1,6 +1,6 @@
 package com.transformservice.controller;
 
-import com.transformservice.converter.ProfileConverter;
+import com.transformservice.mapper.ProfileMapper;
 import com.transformservice.domain.dto.ProfileDto;
 import com.transformservice.service.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "profile")
+@RequestMapping(path = "/profile")
 public class ProfileController {
 
     private final ProfileService profileService;
@@ -25,21 +25,21 @@ public class ProfileController {
     public ResponseEntity<ProfileDto> get(@PathVariable Long profileId) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(ProfileConverter.toDto(profileService.getById(profileId)));
+                .body(ProfileMapper.toDto(profileService.getById(profileId)));
     }
 
     @GetMapping
     public ResponseEntity<List<ProfileDto>> getAll() {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(ProfileConverter.toDtoList(profileService.getAll()));
+                .body(ProfileMapper.toDtoList(profileService.getAll()));
     }
 
     @PostMapping
     public ResponseEntity<ProfileDto> create(@RequestBody ProfileDto profileDto) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(ProfileConverter.toDto(profileService.create(profileDto)));
+                .body(ProfileMapper.toDto(profileService.create(profileDto)));
     }
 
     @PutMapping(path = "/{profileId}")
@@ -47,7 +47,7 @@ public class ProfileController {
                                              @RequestBody ProfileDto profileDto) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(ProfileConverter.toDto(profileService.update(profileId, profileDto)));
+                .body(ProfileMapper.toDto(profileService.update(profileId, profileDto)));
     }
 
     @DeleteMapping(path = "/{profileId}")
