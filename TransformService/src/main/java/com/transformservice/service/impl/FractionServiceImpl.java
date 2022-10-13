@@ -52,9 +52,7 @@ public class FractionServiceImpl implements FractionService {
 
     @Override
     public List<Fraction> create(Long profileId, FractionsDto fractionsDto) {
-        if (fractionsDto.isAnyFieldNull()) {
-            throw new DataMissingException("Fractions by all 12 months must not be null.");
-        }
+        validateFractionFields(fractionsDto);
 
         Profile profile = profileService.getById(profileId);
 
@@ -65,9 +63,7 @@ public class FractionServiceImpl implements FractionService {
 
     @Override
     public List<Fraction> update(Long profileId, FractionsDto fractionsDto) {
-        if (fractionsDto.isAnyFieldNull()) {
-            throw new DataMissingException("Fractions by all 12 months must not be null.");
-        }
+        validateFractionFields(fractionsDto);
 
         List<Fraction> fractions = getAllByProfile(profileId);
 
@@ -81,6 +77,12 @@ public class FractionServiceImpl implements FractionService {
         List<Fraction> fractions = getAllByProfile(profileId);
 
         fractionRepository.deleteAll(fractions);
+    }
+
+    private static void validateFractionFields(FractionsDto fractionsDto) {
+        if (fractionsDto.isAnyFieldNull()) {
+            throw new DataMissingException("Fractions by all 12 months must not be null.");
+        }
     }
 
     private List<Fraction> createFractions(FractionsDto fractionsDto, Profile profile) {

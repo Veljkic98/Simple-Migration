@@ -64,13 +64,6 @@ public class RestResponseEntityExceptionHandler {
         return createResponseEntity(createExceptionWrapper(e.getMessage(), HttpStatus.NOT_FOUND));
     }
 
-    @ExceptionHandler(value = { ColumnDataMissingException.class })
-    //todo: delete this zato sto ne koristimo ovaj exception
-    protected ResponseEntity<ErrorResponse> handleNotFound(final ColumnDataMissingException e) {
-        log.warn(e.getMessage());
-        return createResponseEntity(createExceptionWrapper(e.getMessage(), HttpStatus.NOT_FOUND));
-    }
-
     private ResponseEntity<ErrorResponse> createResponseEntity(ErrorResponse errorResponse) {
         return new ResponseEntity<>(errorResponse, errorResponse.getHttpStatus());
     }
