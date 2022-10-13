@@ -9,11 +9,12 @@ public interface ProfileService {
 
     Profile getById(Long profileId);
 
+    List<Profile> getAll();
+
     Profile create(ProfileDto profileDto);
 
     Profile update(Long profileId, ProfileDto profileDto);
 
     void delete(Long profileId);
 
-    List<Profile> getAll();
 }

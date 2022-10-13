@@ -7,9 +7,9 @@ import java.util.List;
 
 public interface MeterService {
 
-    List<Meter> getAllByProfile(Long profileId);
-
     Meter getById(Long profileId, Long meterId);
+
+    List<Meter> getAllByProfile(Long profileId);
 
     Meter create(Long profileId, MeterDto meterDto);
 

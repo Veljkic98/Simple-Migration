@@ -6,8 +6,6 @@ import com.transformservice.exception.DataNotFoundException;
 import com.transformservice.exception.ReferentialIntegrityConstraintViolationException;
 import com.transformservice.repository.ProfileRepository;
 import com.transformservice.service.ProfileService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -20,8 +18,6 @@ public class ProfileServiceImpl implements ProfileService {
 
     private final ProfileRepository profileRepository;
 
-    Logger log = LoggerFactory.getLogger(ProfileServiceImpl.class);
-
     @Autowired
     public ProfileServiceImpl(ProfileRepository profileRepository) {
         this.profileRepository = profileRepository;
@@ -32,7 +28,6 @@ public class ProfileServiceImpl implements ProfileService {
         Optional<Profile> profile = profileRepository.findById(id);
 
         if (profile.isEmpty()) {
-            log.warn("Profile with id: {} not found.", id);
             throw new DataNotFoundException(String.format("Profile with id: %s not found.", id));
         }
 
@@ -69,7 +64,6 @@ public class ProfileServiceImpl implements ProfileService {
         try {
             profileRepository.delete(profile);
         } catch (DataIntegrityViolationException e) {
-            log.warn("Profile with id {} has Meters and Fractions attached, and cannot be deleted.", profileId);
             throw new ReferentialIntegrityConstraintViolationException(String.format(
                     "Profile with id %s has Meters and Fractions attached, and cannot be deleted.", profileId
             ));

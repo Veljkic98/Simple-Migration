@@ -9,8 +9,6 @@ import com.transformservice.exception.InvalidDataException;
 import com.transformservice.repository.FractionRepository;
 import com.transformservice.service.FractionService;
 import com.transformservice.service.ProfileService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,24 +26,11 @@ public class FractionServiceImpl implements FractionService {
 
     private final ProfileService profileService;
 
-    Logger log = LoggerFactory.getLogger(FractionServiceImpl.class);
-
     @Autowired
-    public FractionServiceImpl(FractionRepository fractionRepository, ProfileService profileService) {
+    public FractionServiceImpl(FractionRepository fractionRepository,
+                               ProfileService profileService) {
         this.fractionRepository = fractionRepository;
         this.profileService = profileService;
-    }
-
-    @Override
-    public List<Fraction> getAllByProfile(Long profileId) {
-        List<Fraction> fractions = fractionRepository.findAllByProfileId(profileId);
-
-        if (fractions.isEmpty()) {
-            log.warn("Fractions for Profile with id {} not found.", profileId);
-            throw new DataNotFoundException(String.format("Profile with id %s not found.", profileId));
-        }
-
-        return fractions;
     }
 
     @Override
@@ -53,7 +38,6 @@ public class FractionServiceImpl implements FractionService {
         Optional<Fraction> fraction = fractionRepository.findAllByProfileIdAndFractionId(profileId, fractionId);
 
         if (fraction.isEmpty()) {
-            log.warn("Fraction for profile with id {} and fraction id {} not found.", profileId, fractionId);
             throw new DataNotFoundException(
                     String.format("Fraction for profile with id %s and fraction id %s not found.", profileId, fractionId));
         }
@@ -62,9 +46,19 @@ public class FractionServiceImpl implements FractionService {
     }
 
     @Override
+    public List<Fraction> getAllByProfile(Long profileId) {
+        List<Fraction> fractions = fractionRepository.findAllByProfileId(profileId);
+
+        if (fractions.isEmpty()) {
+            throw new DataNotFoundException(String.format("Profile with id %s not found.", profileId));
+        }
+
+        return fractions;
+    }
+
+    @Override
     public List<Fraction> create(Long profileId, FractionsDto fractionsDto) {
         if (fractionsDto.isAnyFieldNull()) {
-            log.warn("Fractions by all 12 months must not be null.");
             throw new DataMissingException("Fractions by all 12 months must not be null.");
         }
 
@@ -78,7 +72,6 @@ public class FractionServiceImpl implements FractionService {
     @Override
     public List<Fraction> update(Long profileId, FractionsDto fractionsDto) {
         if (fractionsDto.isAnyFieldNull()) {
-            log.warn("Fractions by all 12 months must not be null.");
             throw new DataMissingException("Fractions by all 12 months must not be null.");
         }
 
@@ -115,8 +108,8 @@ public class FractionServiceImpl implements FractionService {
         fractions.add(createFraction(months.get(11), fractionsDto.getDecFraction(), profile));
 
         if (!fractionsEqualsOne(fractions)) {
-            log.warn("Sum of all fractions must be 1.");
-            throw new InvalidDataException("Sum of all fractions must be 1.");
+            throw new InvalidDataException(
+                    String.format("Sum of all fractions br profile with id %s must be 1.", profile.getId()));
         }
 
         return fractions;
@@ -149,6 +142,7 @@ public class FractionServiceImpl implements FractionService {
 
     private int findIdxOfFractionByMonth(String month, List<Fraction> fractions) {
         int idx = 0;
+
         for (Fraction f : fractions) {
             if (f.getMonth().equalsIgnoreCase(month)) return idx;
             idx++;

@@ -10,8 +10,6 @@ import com.transformservice.repository.ReadingRepository;
 import com.transformservice.service.FractionService;
 import com.transformservice.service.MeterService;
 import com.transformservice.service.ReadingService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,15 +22,11 @@ import static com.transformservice.util.ApplicationConstants.createMapOfMonths;
 @Service
 public class ReadingServiceImpl implements ReadingService {
 
-    private static final String INVALID_PROFILE_ERROR_MESSAGE = "Readings by all 12 months must not be null.";
-
     private final ReadingRepository readingRepository;
 
     private final MeterService meterService;
 
     private final FractionService fractionService;
-
-    private final Logger log = LoggerFactory.getLogger(ReadingServiceImpl.class);
 
     @Autowired
     public ReadingServiceImpl(ReadingRepository readingRepository,
@@ -50,31 +44,64 @@ public class ReadingServiceImpl implements ReadingService {
 
     @Override
     public List<Reading> create(Long profileId, Long meterId, ReadingsDto readingsDto) {
-        if (readingsDto.isAnyFieldNull()) {
-            log.warn("Readings by all 12 months must not be null.");
-            throw new DataMissingException("Readings by all 12 months must not be null.");
-        }
+        validateReadingFields(readingsDto);
 
         Meter meter = meterService.getById(profileId, meterId);
 
         List<Reading> readings = createReadings(meter, readingsDto);
 
-        roga(profileId, meterId, readings);
+        validateReadingsIncreasingByMonths(meterId, readings);
+        validateReadingsProportionalityWithFractions(profileId, readings);
 
         return readingRepository.saveAll(readings);
     }
 
-    private void roga(Long profileId, Long meterId, List<Reading> readings) {
+    @Override
+    public List<Reading> update(Long profileId, Long meterId, ReadingsDto readingsDto) {
+        validateReadingFields(readingsDto);
+
+        List<Reading> readings = getAll(profileId, meterId);
+
+        validateReadingsIncreasingByMonths(meterId, readings);
+        validateReadingsProportionalityWithFractions(profileId, readings);
+
+        updateReadings(readings, readingsDto);
+
+        return readingRepository.saveAll(readings);
+    }
+
+    @Override
+    public void delete(Long profileId, Long meterId) {
+        List<Reading> readings = getAll(profileId, meterId);
+
+        readingRepository.deleteAll(readings);
+    }
+
+    /**
+     * @param meterId is ID of Meter
+     * @param readings is list of Readings by months
+     */
+    private void validateReadingsIncreasingByMonths(Long meterId, List<Reading> readings) {
         if (!isReadingsIncreasingByMonths(readings)) {
-            log.warn("Meter readings are not increasing by months for meter with id: {}.", meterId);
             throw new InvalidDataException(
                     String.format("Meter readings are not increasing by months for meter with id: %s.", meterId));
         }
+    }
 
+    /**
+     * @param profileId is ID of Profile
+     * @param readings is List of Readings by months
+     */
+    private void validateReadingsProportionalityWithFractions(Long profileId, List<Reading> readings) {
         if (!isMeterReadingProportionalWithFractions(profileId, readings)) {
-            log.warn("Reading for profile with id {} is not proportional with fraction.", profileId);
             throw new InvalidDataException(
                     String.format("Reading for profile with id %s is not proportional with fraction.", profileId));
+        }
+    }
+
+    private void validateReadingFields(ReadingsDto readingsDto) {
+        if (readingsDto.isAnyFieldNull()) {
+            throw new DataMissingException("Readings by all 12 months must not be null.");
         }
     }
 
@@ -104,27 +131,6 @@ public class ReadingServiceImpl implements ReadingService {
         }
 
         return true;
-    }
-
-    @Override
-    public List<Reading> update(Long profileId, Long meterId, ReadingsDto readingsDto) {
-        if (readingsDto.isAnyFieldNull()) {
-            log.warn("Readings by all 12 months must not be null.");
-            throw new DataMissingException("Readings by all 12 months must not be null.");
-        }
-
-        List<Reading> readings = getAll(profileId, meterId);
-
-        roga(profileId, meterId, readings);
-
-        updateReadings(readings, readingsDto);
-
-        return readingRepository.saveAll(readings);
-    }
-
-    @Override
-    public void delete(Long profileId, Long meterId) {
-
     }
 
     private List<Reading> createReadings(Meter meter, ReadingsDto readingsDto) {
@@ -163,6 +169,14 @@ public class ReadingServiceImpl implements ReadingService {
         readings.get(findIdxOfFractionByMonth("DEC", readings)).setValue(readingsDto.getDecReading());
     }
 
+    private Reading createReading(String month, Meter meter, Integer readingValue) {
+        return Reading.Builder.newInstance()
+                .month(month)
+                .meter(meter)
+                .value(readingValue)
+                .build();
+    }
+
     private int findIdxOfFractionByMonth(String month, List<Reading> readings) {
         int idx = 0;
         for (Reading r : readings) {
@@ -171,14 +185,6 @@ public class ReadingServiceImpl implements ReadingService {
         }
 
         return -1;
-    }
-
-    private Reading createReading(String month, Meter meter, Integer readingValue) {
-        return Reading.Builder.newInstance()
-                .month(month)
-                .meter(meter)
-                .value(readingValue)
-                .build();
     }
 
 }
