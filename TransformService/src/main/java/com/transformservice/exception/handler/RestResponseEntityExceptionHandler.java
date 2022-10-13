@@ -26,13 +26,6 @@ public class RestResponseEntityExceptionHandler {
 
     // 400
 
-    //todo: delete this, sve treba da bude pokriveno...
-//    @ExceptionHandler(value = { DataIntegrityViolationException.class })
-//    protected ResponseEntity<ErrorResponse> handleBadRequest(final DataIntegrityViolationException ex) {
-//        final String message = "Data Integrity Exception occurred.";
-//        return createResponseEntity(createExceptionWrapper(message, HttpStatus.BAD_REQUEST));
-//    }
-
     @ExceptionHandler(value = { IOException.class, CsvValidationException.class })
     protected ResponseEntity<ErrorResponseDto> handleBadRequest() {
         final String bodyOfResponse = "Incorrect data in file.";
