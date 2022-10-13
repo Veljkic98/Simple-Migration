@@ -8,6 +8,9 @@ import java.util.List;
 
 public class MeterConverter {
 
+    private MeterConverter() {
+    }
+
     public static MeterDto toDto(Meter meter) {
         return MeterDto.Builder.newInstance()
                 .id(meter.getId())

@@ -3,6 +3,7 @@ package com.transformservice.error;
 import com.opencsv.exceptions.CsvValidationException;
 import com.transformservice.exception.ColumnDataMissingException;
 import com.transformservice.exception.DataNotFoundException;
+import com.transformservice.exception.ReferentialIntegrityConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -33,6 +34,11 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     public ResponseEntity<Object> handleBadRequest(final RuntimeException ex, final WebRequest request) {
         final String bodyOfResponse = "File not found or incorrect data in file.";
         return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+    }
+
+    @ExceptionHandler({ ReferentialIntegrityConstraintViolationException.class})
+    public ResponseEntity<Object> handleBadRequest(final ReferentialIntegrityConstraintViolationException ex, final WebRequest request) {
+        return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
     // 404

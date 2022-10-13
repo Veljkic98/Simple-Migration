@@ -1,14 +1,10 @@
 package com.transformservice.service.impl;
 
 import com.opencsv.bean.CsvToBeanBuilder;
-import com.transformservice.domain.dto.MeterDto;
-import com.transformservice.domain.dto.UploadMeterReadingDto;
-import com.transformservice.domain.dto.UploadProfileDto;
-import com.transformservice.domain.entity.Fraction;
+import com.transformservice.domain.dto.*;
 import com.transformservice.domain.entity.Meter;
 import com.transformservice.domain.entity.Profile;
-import com.transformservice.domain.entity.Reading;
-import com.transformservice.exception.DataNotFoundException;
+import com.transformservice.service.FractionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,20 +27,18 @@ public class TransformServiceImpl {
 
     private final MeterServiceImpl meterService;
 
-    private final FractionServiceImpl fractionServiceImpl;
+    private final FractionService fractionService;
 
     private final ReadingServiceImpl readingService;
-
-    Logger log = LoggerFactory.getLogger(TransformServiceImpl.class);
 
     @Autowired
     public TransformServiceImpl(ProfileServiceImpl profileService,
                                 MeterServiceImpl meterService,
-                                FractionServiceImpl fractionServiceImpl,
+                                FractionService fractionService,
                                 ReadingServiceImpl readingService) {
         this.profileService = profileService;
         this.meterService = meterService;
-        this.fractionServiceImpl = fractionServiceImpl;
+        this.fractionService = fractionService;
         this.readingService = readingService;
     }
 
@@ -66,7 +60,7 @@ public class TransformServiceImpl {
         List<UploadProfileDto> uploadMeterReadings = loadDistinctUploadProfiles(fileProfiles);
         List<Profile> profiles = new ArrayList<>();
 
-        uploadMeterReadings.forEach(p -> profiles.add(profileService.create(Profile.Builder.newInstance()
+        uploadMeterReadings.forEach(p -> profiles.add(profileService.create(ProfileDto.Builder.newInstance()
                 .name(p.getProfile())
                 .build())));
 
@@ -78,13 +72,7 @@ public class TransformServiceImpl {
         List<Meter> meters = new ArrayList<>();
 
         readingDtos.forEach(mr -> {
-            Profile profile;
-
-            try {
-                profile = profiles.get(mr.getProfile());
-            } catch (NullPointerException e) {
-                throw new DataNotFoundException(String.format("Profile with name: %s not found.", mr.getProfile()));
-            }
+            Profile profile = profiles.get(mr.getProfile());
 
             meters.add(meterService.create(profile.getId(), MeterDto.Builder.newInstance()
                     .meterIdentifier(mr.getMeterIdentifier())
@@ -97,33 +85,78 @@ public class TransformServiceImpl {
     private void parseAndCreateFractions(Map<String, Profile> profiles, MultipartFile fileProfiles) throws IOException {
         List<UploadProfileDto> profileDtos = loadUploadProfiles(fileProfiles);
 
-        profileDtos.forEach( p -> {
-            Profile profile;
+        for (Map.Entry<String, Profile> profile : profiles.entrySet()) {
+            fractionService.create(profile.getValue().getId(),
+                    createFractionsForProfile(profile, profileDtos));
+        }
+    }
 
-            try {
-                profile = profiles.get(p.getProfile());
-            } catch (NullPointerException e) {
-                throw new DataNotFoundException(String.format("Profile with name: %s not found.", p.getProfile()));
+    private FractionsDto createFractionsForProfile(Map.Entry<String, Profile> profile, List<UploadProfileDto> profileDtos) {
+        FractionsDto fractionsDto = new FractionsDto();
+
+        profileDtos.forEach(p -> {
+            if (p.getProfile().equalsIgnoreCase(profile.getValue().getName())) {
+                attachFractionByMonth(fractionsDto, p);
             }
-
-            fractionServiceImpl.create(Fraction.Builder.newInstance()
-                    .month(p.getMonth())
-                    .value(p.getFraction())
-                    .profile(profile)
-                    .build());
         });
+
+        return fractionsDto;
+    }
+
+    private void attachFractionByMonth(FractionsDto fractionsDto, UploadProfileDto uploadProfileDto) {
+        switch (uploadProfileDto.getMonth().toUpperCase()) {
+            case "JAN" -> fractionsDto.setJanFraction(uploadProfileDto.getFraction());
+            case "FEB" -> fractionsDto.setFebFraction(uploadProfileDto.getFraction());
+            case "MAR" -> fractionsDto.setMarFraction(uploadProfileDto.getFraction());
+            case "APR" -> fractionsDto.setAprFraction(uploadProfileDto.getFraction());
+            case "MAY" -> fractionsDto.setMayFraction(uploadProfileDto.getFraction());
+            case "JUN" -> fractionsDto.setJunFraction(uploadProfileDto.getFraction());
+            case "JUL" -> fractionsDto.setJulFraction(uploadProfileDto.getFraction());
+            case "AVG" -> fractionsDto.setAvgFraction(uploadProfileDto.getFraction());
+            case "SEP" -> fractionsDto.setSepFraction(uploadProfileDto.getFraction());
+            case "OCT" -> fractionsDto.setOctFraction(uploadProfileDto.getFraction());
+            case "NOV" -> fractionsDto.setNovFraction(uploadProfileDto.getFraction());
+            case "DEC" -> fractionsDto.setDecFraction(uploadProfileDto.getFraction());
+        }
     }
 
     private void parseAndCreateReadings(Map<String, Meter> meters, MultipartFile file) throws IOException {
         List<UploadMeterReadingDto> readingDtos = loadUploadMeterReadings(file);
 
+        for (Map.Entry<String, Meter> meter : meters.entrySet()) {
+            readingService.create(meter.getValue().getProfile().getId(),
+                    meter.getValue().getId(),
+                    createReadingsForMeter(readingDtos, meter.getKey()));
+        }
+    }
+
+    private ReadingsDto createReadingsForMeter(List<UploadMeterReadingDto> readingDtos, String meterIdentifier) {
+        ReadingsDto readingsDto = new ReadingsDto();
+
         readingDtos.forEach(mr -> {
-            readingService.create(Reading.Builder.newInstance()
-                    .meter(meters.get(mr.getMeterIdentifier()))
-                            .month(mr.getMonth())
-                            .value(mr.getMeterReading())
-                    .build());
+            if (mr.getMeterIdentifier().equalsIgnoreCase(meterIdentifier)) {
+                attachReadingByMonth(readingsDto, mr);
+            }
         });
+
+        return readingsDto;
+    }
+
+    private void attachReadingByMonth(ReadingsDto readingsDto, UploadMeterReadingDto mr) {
+        switch (mr.getMonth().toUpperCase()) {
+            case "JAN" -> readingsDto.setJanReading(mr.getMeterReading());
+            case "FEB" -> readingsDto.setFebReading(mr.getMeterReading());
+            case "MAR" -> readingsDto.setMarReading(mr.getMeterReading());
+            case "APR" -> readingsDto.setAprReading(mr.getMeterReading());
+            case "MAY" -> readingsDto.setMayReading(mr.getMeterReading());
+            case "JUN" -> readingsDto.setJunReading(mr.getMeterReading());
+            case "JUL" -> readingsDto.setJulReading(mr.getMeterReading());
+            case "AVG" -> readingsDto.setAvgReading(mr.getMeterReading());
+            case "SEP" -> readingsDto.setSepReading(mr.getMeterReading());
+            case "OCT" -> readingsDto.setOctReading(mr.getMeterReading());
+            case "NOV" -> readingsDto.setNovReading(mr.getMeterReading());
+            case "DEC" -> readingsDto.setDecReading(mr.getMeterReading());
+        }
     }
 
     private List<UploadProfileDto> loadDistinctUploadProfiles(MultipartFile file) throws IOException {

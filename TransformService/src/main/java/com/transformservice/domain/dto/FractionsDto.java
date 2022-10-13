@@ -1,31 +1,44 @@
 package com.transformservice.domain.dto;
 
+import javax.validation.constraints.NotNull;
+
 public class FractionsDto {
 
+    @NotNull
     private Double janFraction;
 
+    @NotNull
     private Double febFraction;
 
+    @NotNull
     private Double marFraction;
 
+    @NotNull
     private Double aprFraction;
 
+    @NotNull
     private Double mayFraction;
 
+    @NotNull
     private Double junFraction;
 
+    @NotNull
     private Double julFraction;
 
+    @NotNull
     private Double avgFraction;
 
+    @NotNull
     private Double sepFraction;
 
+    @NotNull
     private Double octFraction;
 
+    @NotNull
     private Double novFraction;
 
+    @NotNull
     private Double decFraction;
-
 
     public FractionsDto() {
         // empty constructor

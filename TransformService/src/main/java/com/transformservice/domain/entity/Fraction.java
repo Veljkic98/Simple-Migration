@@ -3,7 +3,10 @@ package com.transformservice.domain.entity;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "fraction")
+// todo TEST THIS Constraints (profile or profile_id)
+@Table(name = "fraction", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"month", "profile_id"})
+})
 public class Fraction {
 
     @Id

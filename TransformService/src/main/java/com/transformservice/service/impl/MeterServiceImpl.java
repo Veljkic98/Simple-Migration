@@ -6,6 +6,7 @@ import com.transformservice.domain.entity.Profile;
 import com.transformservice.exception.DataNotFoundException;
 import com.transformservice.repository.MeterRepository;
 import com.transformservice.service.MeterService;
+import com.transformservice.service.ProfileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +21,12 @@ public class MeterServiceImpl implements MeterService {
 
     private final MeterRepository meterRepository;
 
-    private final ProfileServiceImpl profileService;
+    private final ProfileService profileService;
 
     Logger log = LoggerFactory.getLogger(MeterServiceImpl.class);
 
     @Autowired
-    public MeterServiceImpl(MeterRepository meterRepository, ProfileServiceImpl profileService) {
+    public MeterServiceImpl(MeterRepository meterRepository, ProfileService profileService) {
         this.meterRepository = meterRepository;
         this.profileService = profileService;
     }

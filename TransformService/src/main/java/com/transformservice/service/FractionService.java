@@ -12,12 +12,10 @@ public interface FractionService {
 
     Fraction getById(Long profileId, Long fractionId);
 
-    Fraction createForOneMonth(Long profileId, FractionDto fractionDto);
+    List<Fraction> create(Long profileId, FractionsDto fractionsDto);
 
-    Fraction createForOneMonth(Long profileId, FractionsDto fractionsDto);
+    List<Fraction> update(Long profileId, FractionsDto fractionDto);
 
-    Fraction update(Long profileId, Long fractionId, FractionDto fractionDto);
-
-    void delete(Long profileId, Long fractionId);
+    void delete(Long profileId);
 
 }

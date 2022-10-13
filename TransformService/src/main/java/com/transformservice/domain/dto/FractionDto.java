@@ -6,7 +6,6 @@ public class FractionDto {
 
     private Long id;
 
-    @NotBlank
     private String month;
 
     @NotBlank

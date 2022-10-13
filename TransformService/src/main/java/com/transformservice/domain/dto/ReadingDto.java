@@ -10,8 +10,6 @@ public class ReadingDto {
 
     private Integer value;
 
-    private Meter meter;
-
     public ReadingDto() {
         // empty constructor
     }
@@ -20,7 +18,6 @@ public class ReadingDto {
         this.id = builder.id;
         this.month = builder.month;
         this.value = builder.value;
-        this.meter = builder.meter;
     }
 
     // get
@@ -37,10 +34,6 @@ public class ReadingDto {
         return value;
     }
 
-    public Meter getMeter() {
-        return meter;
-    }
-
     // set
 
     public void setId(Long id) {
@@ -55,10 +48,6 @@ public class ReadingDto {
         this.value = value;
     }
 
-    public void setMeter(Meter meter) {
-        this.meter = meter;
-    }
-
     public static class Builder {
 
         private Long id;
@@ -66,8 +55,6 @@ public class ReadingDto {
         private String month;
 
         private Integer value;
-
-        private Meter meter;
 
         public static Builder newInstance() {
             return new Builder();
@@ -85,11 +72,6 @@ public class ReadingDto {
 
         public Builder value(Integer value) {
             this.value = value;
-            return this;
-        }
-
-        public Builder meter(Meter meter) {
-            this.meter = meter;
             return this;
         }
 
