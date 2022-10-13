@@ -1,6 +1,7 @@
 package com.transformservice.exception.handler;
 
 import com.opencsv.exceptions.CsvValidationException;
+import com.transformservice.domain.dto.ErrorResponseDto;
 import com.transformservice.exception.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,25 +34,25 @@ public class RestResponseEntityExceptionHandler {
 //    }
 
     @ExceptionHandler(value = { IOException.class, CsvValidationException.class })
-    protected ResponseEntity<ErrorResponse> handleBadRequest() {
+    protected ResponseEntity<ErrorResponseDto> handleBadRequest() {
         final String bodyOfResponse = "Incorrect data in file.";
         return createResponseEntity(createExceptionWrapper(bodyOfResponse, HttpStatus.BAD_REQUEST));
     }
 
     @ExceptionHandler(value = { ReferentialIntegrityConstraintViolationException.class})
-    protected ResponseEntity<ErrorResponse> handleBadRequest(final ReferentialIntegrityConstraintViolationException e) {
+    protected ResponseEntity<ErrorResponseDto> handleBadRequest(final ReferentialIntegrityConstraintViolationException e) {
         log.warn(e.getMessage());
         return createResponseEntity(createExceptionWrapper(e.getMessage(), HttpStatus.BAD_REQUEST));
     }
 
     @ExceptionHandler(value = { DataMissingException.class })
-    protected ResponseEntity<ErrorResponse> handleBadRequest(final DataMissingException e) {
+    protected ResponseEntity<ErrorResponseDto> handleBadRequest(final DataMissingException e) {
         log.warn(e.getMessage());
         return createResponseEntity(createExceptionWrapper(e.getMessage(), HttpStatus.BAD_REQUEST));
     }
 
     @ExceptionHandler(value = { InvalidDataException.class })
-    protected ResponseEntity<ErrorResponse> handleBadRequest(final InvalidDataException e) {
+    protected ResponseEntity<ErrorResponseDto> handleBadRequest(final InvalidDataException e) {
         log.warn(e.getMessage());
         return createResponseEntity(createExceptionWrapper(e.getMessage(), HttpStatus.BAD_REQUEST));
     }
@@ -59,17 +60,17 @@ public class RestResponseEntityExceptionHandler {
     // 404
 
     @ExceptionHandler(value = { DataNotFoundException.class })
-    protected ResponseEntity<ErrorResponse> handleNotFound(final DataNotFoundException e) {
+    protected ResponseEntity<ErrorResponseDto> handleNotFound(final DataNotFoundException e) {
         log.warn(e.getMessage());
         return createResponseEntity(createExceptionWrapper(e.getMessage(), HttpStatus.NOT_FOUND));
     }
 
-    private ResponseEntity<ErrorResponse> createResponseEntity(ErrorResponse errorResponse) {
+    private ResponseEntity<ErrorResponseDto> createResponseEntity(ErrorResponseDto errorResponse) {
         return new ResponseEntity<>(errorResponse, errorResponse.getHttpStatus());
     }
 
-    private ErrorResponse createExceptionWrapper(String message, HttpStatus httpStatus) {
-        return new ErrorResponse(request, message, httpStatus);
+    private ErrorResponseDto createExceptionWrapper(String message, HttpStatus httpStatus) {
+        return new ErrorResponseDto(request, message, httpStatus);
     }
 
 }

@@ -1,4 +1,4 @@
-package com.transformservice.exception.handler;
+package com.transformservice.domain.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.Objects;
 
-public class ErrorResponse {
+public class ErrorResponseDto {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = ApplicationConstants.DATE_PATTERN)
     private final Date date;
@@ -27,7 +27,7 @@ public class ErrorResponse {
 
     private final String path;
 
-    public ErrorResponse(HttpServletRequest request, String message, HttpStatus httpStatus) {
+    public ErrorResponseDto(HttpServletRequest request, String message, HttpStatus httpStatus) {
         this.date = new Date();
         this.httpStatus = httpStatus;
         this.status = httpStatus.value();

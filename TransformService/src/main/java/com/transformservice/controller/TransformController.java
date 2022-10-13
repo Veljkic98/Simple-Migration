@@ -27,7 +27,9 @@ public class TransformController {
             throws IOException {
         transformService.parse(fileProfiles, fileMeterReadings);
 
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .build();
     }
 
 }
