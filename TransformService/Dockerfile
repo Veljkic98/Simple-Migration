@@ -4,9 +4,4 @@ EXPOSE 8080
 
 ADD target/TransformService-0.0.1-SNAPSHOT.jar TransformService-0.0.1-SNAPSHOT.jar
 
-WORKDIR /csvfiles
-
-ADD src/main/resources/csvfiles/profiles.csv profiles.csv
-ADD src/main/resources/csvfiles/meterReadings.csv meterReadings.csv
-
 ENTRYPOINT [ "java", "-Dspring.profiles.active=prod", "-jar", "/TransformService-0.0.1-SNAPSHOT.jar" ]
