@@ -19,6 +19,7 @@
         <h2.version>2.1.214</h2.version>
         <spring.boot.version>2.7.0</spring.boot.version>
         <postgresql.version>42.4.0</postgresql.version>
+        <openapi.version>1.6.4</openapi.version>
     </properties>
     <dependencies>
         <dependency>
@@ -71,6 +72,13 @@
             <artifactId>spring-boot-starter-data-jpa</artifactId>
             <version>${spring.boot.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>${openapi.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>
