@@ -1,5 +1,5 @@
-# Simple-Migration
-It is simple application to migrate data.
+# Energy Consumption
+It is simple application to store, retrieve and power measure data.
 
 ## Getting Started
 ### Prerequisites
@@ -35,13 +35,13 @@ Run next command
 ```
 
 ## Future steps
-### If this is real application, following steps will be applied:
+### If this is not for the purpose od use case, following steps would be applied:
 - Add Authentication and Authorization (OAuth2 - custom or Google's)
-- Upload Data files on bucket (on local env it could be Minio, on prod env AWS S3 for example)
-- Write rest of tests
-- configure where to write logs and present them through ELK stack
-- Add swagger documentation for rest of controllers
-- Create generic Builder
+- In case it is necessary to save files, than upload data files on bucket (on local env it could be Minio, on prod env AWS S3 for example)
+- Increase test coverage of Integration and Unit tests at least to 80%
+- Additionaly Configure where to write logs and present them through ELK stack
+- Cover all controllers with Swagger documentation
+- Implement generic Builder pattern
 - Use lombok instead of geters, setters, constructors and builders
-- Write proper javaDoc
+- Write proper javaDoc comments
 
