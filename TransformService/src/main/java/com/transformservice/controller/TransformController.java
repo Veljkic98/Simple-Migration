@@ -1,28 +1,35 @@
 package com.transformservice.controller;
 
-import com.opencsv.exceptions.CsvValidationException;
-import com.transformservice.service.ProfileService;
+import com.transformservice.service.impl.TransformServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
 @RestController
 public class TransformController {
 
-    private ProfileService profileService;
+    private final TransformServiceImpl transformService;
 
     @Autowired
-    public TransformController(ProfileService profileService) {
-        this.profileService = profileService;
+    public TransformController(TransformServiceImpl transformService) {
+        this.transformService = transformService;
     }
 
-    @GetMapping(path = "/start")
-    public ResponseEntity<Void> start() throws IOException, CsvValidationException {
-        profileService.proceed();
-        return ResponseEntity.ok().build();
+    @PostMapping(path = "/upload")
+    public ResponseEntity<Void> uploadData(@RequestParam("profiles") MultipartFile fileProfiles,
+                                           @RequestParam("meterReadings") MultipartFile fileMeterReadings)
+            throws IOException {
+        transformService.parse(fileProfiles, fileMeterReadings);
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .build();
     }
 
 }

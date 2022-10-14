@@ -6,118 +6,737 @@
 	},
 	"item": [
 		{
-			"name": "Get Profile",
-			"protocolProfileBehavior": {
-				"disabledSystemHeaders": {}
-			},
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:8082/profile/1",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8082",
-					"path": [
-						"profile",
-						"1"
-					]
+			"name": "Meter",
+			"item": [
+				{
+					"name": "Get All Meters By Profile",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/profile/1/meter",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"profile",
+								"1",
+								"meter"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"meterIdentifier\": \"123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/profile/1/meter/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"profile",
+								"1",
+								"meter",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"meterIdentifier\": \"32\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/profile/1/meter",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"profile",
+								"1",
+								"meter"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Meter",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/profile/1/meter/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"profile",
+								"1",
+								"meter",
+								"3"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "Get Profiles by Name",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true,
-				"disabledSystemHeaders": {}
-			},
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "",
-							"value": "",
-							"type": "default",
-							"disabled": true
+			"name": "Upload",
+			"item": [
+				{
+					"name": "Upload Data",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "profiles",
+									"type": "file",
+									"src": "/Users/veljkoplecas/projects/csvfiles/profiles.csv"
+								},
+								{
+									"key": "meterReadings",
+									"type": "file",
+									"src": "/Users/veljkoplecas/projects/csvfiles/meterReadings.csv"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/upload",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"upload"
+							]
 						}
-					]
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "http://localhost:8082/profile/?profileName=AC",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8082",
-					"path": [
-						"profile",
-						""
-					],
-					"query": [
-						{
-							"key": "profileName",
-							"value": "AC"
+				{
+					"name": "Send Profiles BAD",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "profiles",
+									"type": "file",
+									"src": "/Users/veljkoplecas/projects/csvfiles/profiles bad.csv"
+								},
+								{
+									"key": "meterReadings",
+									"type": "file",
+									"src": "/Users/veljkoplecas/projects/csvfiles/meterReadings.csv"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/upload",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"upload"
+							]
 						}
-					]
+					},
+					"response": []
+				},
+				{
+					"name": "Send Readings BAD",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "profiles",
+									"type": "file",
+									"src": "/Users/veljkoplecas/projects/csvfiles/profiles.csv"
+								},
+								{
+									"key": "meterReadings",
+									"type": "file",
+									"src": "/Users/veljkoplecas/projects/csvfiles/meterReadings bad.csv"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/upload",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"upload"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Send Profiles NON PROPORTIONAL",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "profiles",
+									"type": "file",
+									"src": "/Users/veljkoplecas/projects/csvfiles/profiles.csv"
+								},
+								{
+									"key": "meterReadings",
+									"type": "file",
+									"src": "/Users/veljkoplecas/projects/csvfiles/meterReadings non proportional.csv"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/upload",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"upload"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "Get Consumption",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true,
-				"disabledSystemHeaders": {}
-			},
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "",
-							"value": "",
-							"type": "default",
-							"disabled": true
+			"name": "Fraction",
+			"item": [
+				{
+					"name": "Get All Fractions By Profile",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/profile/1/fraction",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"profile",
+								"1",
+								"fraction"
+							]
 						}
-					]
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "http://localhost:8082/profile/consumption/?profileName=AC&monthFrom=JAN&monthTo=FEB",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8082",
-					"path": [
-						"profile",
-						"consumption",
-						""
-					],
-					"query": [
-						{
-							"key": "profileName",
-							"value": "AC"
-						},
-						{
-							"key": "monthFrom",
-							"value": "JAN"
-						},
-						{
-							"key": "monthTo",
-							"value": "FEB"
+				{
+					"name": "Get One Fraction",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/profile/1/fraction/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"profile",
+								"1",
+								"fraction",
+								"2"
+							]
 						}
-					]
+					},
+					"response": []
+				},
+				{
+					"name": "Create Fractions",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"janFraction\": 0.2,\n    \"febFraction\": 0.13,\n    \"marFraction\": 0.13,\n    \"aprFraction\": 0.1,\n    \"mayFraction\": 0.08,\n    \"junFraction\": 0.0,\n    \"julFraction\": 0.0,\n    \"avgFraction\": 0.0,\n    \"sepFraction\": 0.03,\n    \"octFraction\": 0.05,\n    \"novFraction\": 0.11,\n    \"decFraction\": 0.17\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/profile/1/fraction",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"profile",
+								"1",
+								"fraction"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Fraction",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"janFraction\": 0.2,\n    \"febFraction\": 0.13,\n    \"marFraction\": 0.13,\n    \"aprFraction\": 0.1,\n    \"mayFraction\": 0.08,\n    \"junFraction\": 0.0,\n    \"julFraction\": 0.0,\n    \"avgFraction\": 0.0,\n    \"sepFraction\": 0.03,\n    \"octFraction\": 0.05,\n    \"novFraction\": 0.15,\n    \"decFraction\": 0.13\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/profile/1/fraction",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"profile",
+								"1",
+								"fraction"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Fractions",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/profile/1/fraction",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"profile",
+								"1",
+								"fraction"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
+		},
+		{
+			"name": "Other",
+			"item": [
+				{
+					"name": "Get Profile",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8082/profile/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"profile",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Profiles by Name",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "",
+									"value": "",
+									"type": "default",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8082/profile/?profileName=DB",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"profile",
+								""
+							],
+							"query": [
+								{
+									"key": "profileName",
+									"value": "DB"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Consumption",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "",
+									"value": "",
+									"type": "default",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8082/profile/consumption?profileName=DB&monthFrom=mar&monthTo=feb",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"profile",
+								"consumption"
+							],
+							"query": [
+								{
+									"key": "profileName",
+									"value": "DB"
+								},
+								{
+									"key": "monthFrom",
+									"value": "mar"
+								},
+								{
+									"key": "monthTo",
+									"value": "feb"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Profile",
+			"item": [
+				{
+					"name": "Get One",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/profile/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"profile",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/profile",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"ABC\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/profile",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"ABHCGS\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/profile/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"profile",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/profile/4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"profile",
+								"4"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Readings",
+			"item": [
+				{
+					"name": "Get All Readings By Profile",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/profile/1/meter/3/reading",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"profile",
+								"1",
+								"meter",
+								"3",
+								"reading"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Readings",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"janReading\": 48,\n    \"febReading\": 79,\n    \"marReading\": 110,\n    \"aprReading\": 134,\n    \"mayReading\": 153,\n    \"junReading\": 153,\n    \"julReading\": 153,\n    \"avgReading\": 153,\n    \"sepReading\": 160,\n    \"octReading\": 172,\n    \"novReading\": 198,\n    \"decReading\": 238\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/profile/1/meter/3/reading",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"profile",
+								"1",
+								"meter",
+								"3",
+								"reading"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Readings",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"janReading\": 48,\n    \"febReading\": 79,\n    \"marReading\": 110,\n    \"aprReading\": 134,\n    \"mayReading\": 153,\n    \"junReading\": 153,\n    \"julReading\": 153,\n    \"avgReading\": 153,\n    \"sepReading\": 160,\n    \"octReading\": 172,\n    \"novReading\": 199,\n    \"decReading\": 240\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/profile/1/meter/3/reading",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"profile",
+								"1",
+								"meter",
+								"3",
+								"reading"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Readings",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/profile/1/meter/3/reading",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"profile",
+								"1",
+								"meter",
+								"3",
+								"reading"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }
