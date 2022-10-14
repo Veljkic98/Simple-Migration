@@ -39,7 +39,7 @@ Run next command
 - Add Authentication and Authorization (OAuth2 - custom or Google's)
 - In case it is necessary to save files, than upload data files on bucket (on local env it could be Minio, on prod env AWS S3 for example)
 - Increase test coverage of Integration and Unit tests at least to 80%
-- Additionaly Configure where to write logs and present them through ELK stack
+- Additionally Configure where to write logs and present them through ELK stack
 - Cover all controllers with Swagger documentation
 - Implement generic Builder pattern
 - Use lombok instead of geters, setters, constructors and builders
