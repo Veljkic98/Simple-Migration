@@ -35,4 +35,13 @@ Run next command
 ```
 
 ## Future steps
-- create generic Builder
+### If this is real application, following steps will be applied:
+- Add Authentication and Authorization (OAuth2 - custom or Google's)
+- Upload Data files on bucket (on local env it could be Minio, on prod env AWS S3 for example)
+- Write rest of tests
+- configure where to write logs and present them through ELK stack
+- Add swagger documentation for rest of controllers
+- Create generic Builder
+- Use lombok instead of geters, setters, constructors and builders
+- Write proper javaDoc
+
