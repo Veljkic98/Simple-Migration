@@ -53,6 +53,7 @@ public class FractionServiceImpl implements FractionService {
     @Override
     public List<Fraction> create(Long profileId, FractionsDto fractionsDto) {
         validateFractionFields(fractionsDto);
+        validateFracionsEqualsOne(profileId, fractionsDto);
 
         Profile profile = profileService.getById(profileId);
 
@@ -64,6 +65,7 @@ public class FractionServiceImpl implements FractionService {
     @Override
     public List<Fraction> update(Long profileId, FractionsDto fractionsDto) {
         validateFractionFields(fractionsDto);
+        validateFracionsEqualsOne(profileId, fractionsDto);
 
         List<Fraction> fractions = getAllByProfile(profileId);
 
@@ -85,6 +87,26 @@ public class FractionServiceImpl implements FractionService {
         }
     }
 
+    private void validateFracionsEqualsOne(Long profileId, FractionsDto fractionsDto) {
+        double sum = fractionsDto.getJanFraction() +
+                fractionsDto.getFebFraction() +
+                fractionsDto.getMarFraction() +
+                fractionsDto.getAprFraction() +
+                fractionsDto.getMayFraction() +
+                fractionsDto.getJunFraction() +
+                fractionsDto.getJulFraction() +
+                fractionsDto.getAvgFraction() +
+                fractionsDto.getSepFraction() +
+                fractionsDto.getOctFraction() +
+                fractionsDto.getNovFraction() +
+                fractionsDto.getDecFraction();
+
+        if (sum != 1.0) {
+            throw new InvalidDataException(
+                    String.format("Sum of all fractions br profile with id %s must be 1.", profileId));
+        }
+    }
+
     private List<Fraction> createFractions(FractionsDto fractionsDto, Profile profile) {
         List<Fraction> fractions = new ArrayList<>();
 
@@ -102,11 +124,6 @@ public class FractionServiceImpl implements FractionService {
         fractions.add(createFraction(months.get(9), fractionsDto.getOctFraction(), profile));
         fractions.add(createFraction(months.get(10), fractionsDto.getNovFraction(), profile));
         fractions.add(createFraction(months.get(11), fractionsDto.getDecFraction(), profile));
-
-        if (!fractionsEqualsOne(fractions)) {
-            throw new InvalidDataException(
-                    String.format("Sum of all fractions br profile with id %s must be 1.", profile.getId()));
-        }
 
         return fractions;
     }
