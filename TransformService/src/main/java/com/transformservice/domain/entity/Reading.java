@@ -3,7 +3,9 @@ package com.transformservice.domain.entity;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "reading")
+@Table(name = "reading", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"month", "meter_id"})
+})
 public class Reading {
 
     @Id

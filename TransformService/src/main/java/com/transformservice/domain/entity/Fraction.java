@@ -3,7 +3,6 @@ package com.transformservice.domain.entity;
 import javax.persistence.*;
 
 @Entity
-// todo TEST THIS Constraints (profile or profile_id)
 @Table(name = "fraction", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"month", "profile_id"})
 })

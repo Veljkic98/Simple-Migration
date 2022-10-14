@@ -9,6 +9,7 @@ import java.util.List;
 public class FractionMapper {
 
     private FractionMapper() {
+        // class instantiation is not allowed
     }
     public static List<FractionDto> toDtoList(List<Fraction> fractions) {
         List<FractionDto> fractionDtos = new ArrayList<>();

@@ -9,6 +9,7 @@ import java.util.List;
 public class MeterMapper {
 
     private MeterMapper() {
+        // class instantiation is not allowed
     }
 
     public static MeterDto toDto(Meter meter) {

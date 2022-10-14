@@ -8,6 +8,10 @@ import java.util.List;
 
 public class ProfileMapper {
 
+    private ProfileMapper() {
+        // class instantiation is not allowed
+    }
+
     public static ProfileDto toDto(Profile profile) {
         return ProfileDto.Builder.newInstance()
                 .id(profile.getId())
@@ -22,4 +26,5 @@ public class ProfileMapper {
 
         return profileDtos;
     }
+
 }
