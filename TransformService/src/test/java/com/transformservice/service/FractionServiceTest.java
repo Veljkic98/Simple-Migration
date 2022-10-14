@@ -4,7 +4,6 @@ import com.transformservice.domain.dto.FractionsDto;
 import com.transformservice.domain.entity.Fraction;
 import com.transformservice.domain.entity.Profile;
 import com.transformservice.exception.DataMissingException;
-import com.transformservice.exception.DataNotFoundException;
 import com.transformservice.exception.InvalidDataException;
 import com.transformservice.repository.FractionRepository;
 import com.transformservice.service.impl.FractionServiceImpl;
@@ -13,7 +12,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import java.util.List;
-import java.util.Optional;
 
 import static com.transformservice.util.TestConstants.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -38,7 +36,7 @@ class FractionServiceTest extends BaseUnitTest {
 
         when(fractionRepository.findAllByProfileId(PROFILE_ID_1)).thenReturn(fractions);
 
-        List<Fraction> obtainedFractions = fractionService.getAllByProfile(PROFILE_ID_1);
+        List<Fraction> obtainedFractions = fractionService.getAll(PROFILE_ID_1);
 
         assertFractions(obtainedFractions, fractions);
     }
@@ -47,32 +45,9 @@ class FractionServiceTest extends BaseUnitTest {
     void getAllByProfileId_profileNotFound_emptyList() {
         when(fractionRepository.findAllByProfileId(any())).thenReturn(List.of());
 
-        List<Fraction> obtainedFractions = fractionService.getAllByProfile(PROFILE_ID_1);
+        List<Fraction> obtainedFractions = fractionService.getAll(PROFILE_ID_1);
 
         assertEquals(0, obtainedFractions.size());
-    }
-
-    @Test
-    void getById_profileIdOk_fraction() {
-        Profile profile = createProfile(PROFILE_ID_1, PROFILE_NAME_1);
-        Fraction fraction = createFraction(profile);
-
-        when(fractionRepository.findAllByProfileIdAndFractionId(PROFILE_ID_1, FRACTION_ID_1))
-                .thenReturn(Optional.of(fraction));
-
-        Fraction obtainedFraction = fractionService.getById(PROFILE_ID_1, FRACTION_ID_1);
-
-        assertFraction(fraction, obtainedFraction);
-    }
-
-    @Test
-    void getById_fractionNotFound_dataNotFoundException() {
-        when(fractionRepository.findAllByProfileIdAndFractionId(any(), any())).thenReturn(Optional.empty());
-
-        Exception exception = assertThrows(DataNotFoundException.class,
-                () -> fractionService.getById(PROFILE_ID_1, 9876L));
-
-        assertTrue(exception.getMessage().contains("not found"));
     }
 
     @Test

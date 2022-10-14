@@ -5,6 +5,11 @@ import com.transformservice.domain.entity.Reading;
 
 import java.util.List;
 
+/**
+ * Meter Reading Service methods.
+ *
+ * @author veljkoplecas
+ */
 public interface ReadingService {
 
     List<Reading> getAll(Long profileId, Long meterId);

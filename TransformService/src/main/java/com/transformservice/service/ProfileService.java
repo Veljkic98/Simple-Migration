@@ -5,6 +5,11 @@ import com.transformservice.domain.entity.Profile;
 
 import java.util.List;
 
+/**
+ * Profile Service methods.
+ *
+ * @author veljkoplecas
+ */
 public interface ProfileService {
 
     Profile getById(Long profileId);

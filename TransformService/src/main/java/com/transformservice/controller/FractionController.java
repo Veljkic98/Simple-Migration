@@ -29,16 +29,7 @@ public class FractionController implements FractionControllerSwagger {
     public ResponseEntity<List<FractionDto>> getAllByProfile(@PathVariable Long profileId) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(FractionMapper.toDtoList(fractionService.getAllByProfile(profileId)));
-    }
-
-    @Override
-    @GetMapping(path = "/{fractionId}")
-    public ResponseEntity<FractionDto> getById(@PathVariable Long profileId,
-                                               @PathVariable Long fractionId) {
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(FractionMapper.toDto(fractionService.getById(profileId, fractionId)));
+                .body(FractionMapper.toDtoList(fractionService.getAll(profileId)));
     }
 
     @Override

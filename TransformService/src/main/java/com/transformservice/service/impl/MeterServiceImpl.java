@@ -40,7 +40,7 @@ public class MeterServiceImpl implements MeterService {
     }
 
     @Override
-    public List<Meter> getAllByProfile(Long profileId) {
+    public List<Meter> getAll(Long profileId) {
         return meterRepository.findAllByProfileId(profileId);
     }
 

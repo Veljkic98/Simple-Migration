@@ -34,19 +34,7 @@ public class FractionServiceImpl implements FractionService {
     }
 
     @Override
-    public Fraction getById(Long profileId, Long fractionId) {
-        Optional<Fraction> fraction = fractionRepository.findAllByProfileIdAndFractionId(profileId, fractionId);
-
-        if (fraction.isEmpty()) {
-            throw new DataNotFoundException(
-                    String.format("Fraction for profile with id %s and fraction id %s not found.", profileId, fractionId));
-        }
-
-        return fraction.get();
-    }
-
-    @Override
-    public List<Fraction> getAllByProfile(Long profileId) {
+    public List<Fraction> getAll(Long profileId) {
         return fractionRepository.findAllByProfileId(profileId);
     }
 
@@ -67,7 +55,7 @@ public class FractionServiceImpl implements FractionService {
         validateFractionFields(fractionsDto);
         validateFracionsEqualsOne(profileId, fractionsDto);
 
-        List<Fraction> fractions = getAllByProfile(profileId);
+        List<Fraction> fractions = getAll(profileId);
 
         updateFractions(fractions, fractionsDto);
 
@@ -76,7 +64,7 @@ public class FractionServiceImpl implements FractionService {
 
     @Override
     public void delete(Long profileId) {
-        List<Fraction> fractions = getAllByProfile(profileId);
+        List<Fraction> fractions = getAll(profileId);
 
         fractionRepository.deleteAll(fractions);
     }

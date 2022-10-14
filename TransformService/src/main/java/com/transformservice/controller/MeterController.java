@@ -26,7 +26,7 @@ public class MeterController {
     public ResponseEntity<List<MeterDto>> getAllByProfile(@PathVariable Long profileId) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(MeterMapper.toDtoList(meterService.getAllByProfile(profileId)));
+                .body(MeterMapper.toDtoList(meterService.getAll(profileId)));
     }
 
     @PostMapping

@@ -106,7 +106,7 @@ public class ReadingServiceImpl implements ReadingService {
     }
 
     private boolean isMeterReadingProportionalWithFractions(Long profileId, List<Reading> readings) {
-        List<Fraction> fractions = fractionService.getAllByProfile(profileId);
+        List<Fraction> fractions = fractionService.getAll(profileId);
 
         double desirableMeterReading = 0;
         for (int i = 0; i < 12; i++) {

@@ -34,23 +34,6 @@ public interface FractionControllerSwagger {
     })
     ResponseEntity<List<FractionDto>> getAllByProfile(@PathVariable Long profileId);
 
-    @Operation(summary = "Get one Fraction by Id")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Successful operation.",
-                    content = @Content(schema = @Schema(implementation = FractionDto.class))),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "Fraction not found.",
-                    content = @Content(mediaType = "application/json")),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "Internal Server Error",
-                    content = @Content(mediaType = "application/json"))
-    })
-    ResponseEntity<FractionDto> getById(@PathVariable Long profileId,
-                                               @PathVariable Long fractionId);
 
     @Operation(summary = "Save new Fraction")
     @ApiResponses(value = {
