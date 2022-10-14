@@ -1,14 +1,11 @@
 package com.transformservice.domain.dto;
 
-import javax.validation.constraints.NotBlank;
-
 public class FractionDto {
 
     private Long id;
 
     private String month;
 
-    @NotBlank
     private Double value;
 
     public FractionDto() {

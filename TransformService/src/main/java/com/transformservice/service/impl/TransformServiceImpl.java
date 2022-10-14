@@ -180,6 +180,7 @@ public class TransformServiceImpl {
     private List<UploadProfileDto> loadUploadProfiles(MultipartFile file) throws IOException {
         BufferedReader fileReader = new BufferedReader(new
                 InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8));
+
         return new CsvToBeanBuilder<UploadProfileDto>(fileReader)
                 .withType(UploadProfileDto.class)
                 .build()

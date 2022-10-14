@@ -1,13 +1,17 @@
 package com.transformservice.domain.dto;
 
+import com.opencsv.bean.CsvBindByName;
 import com.transformservice.domain.entity.Profile;
 
 public class UploadProfileDto {
 
+    @CsvBindByName
     private String profile;
 
+    @CsvBindByName
     private String month;
 
+    @CsvBindByName
     private Double fraction;
 
     public UploadProfileDto() {
