@@ -1,10 +1,12 @@
 package com.transformservice.service.impl;
 
+import com.transformservice.domain.dto.ConsumptionDto;
 import com.transformservice.domain.dto.ReadingsDto;
 import com.transformservice.domain.entity.Fraction;
 import com.transformservice.domain.entity.Meter;
 import com.transformservice.domain.entity.Reading;
 import com.transformservice.exception.DataMissingException;
+import com.transformservice.exception.DataNotFoundException;
 import com.transformservice.exception.InvalidDataException;
 import com.transformservice.repository.ReadingRepository;
 import com.transformservice.service.FractionService;
@@ -16,8 +18,10 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static com.transformservice.util.ApplicationConstants.createMapOfMonths;
+import static com.transformservice.util.ApplicationConstants.getKey;
 
 @Service
 public class ReadingServiceImpl implements ReadingService {
@@ -35,6 +39,21 @@ public class ReadingServiceImpl implements ReadingService {
         this.readingRepository = readingRepository;
         this.meterService = meterService;
         this.fractionService = fractionService;
+    }
+
+    @Override
+    public ConsumptionDto getConsumption(Long profileId, Long meterId, ConsumptionDto consumptionDto) {
+        validateMonthFromBeforeMonthTo(consumptionDto);
+
+        Optional<Reading> readingFrom = readingRepository.findReadingByMonth(profileId, meterId, consumptionDto.getMonthFrom().toUpperCase());
+        Optional<Reading> readingTo = readingRepository.findReadingByMonth(profileId, meterId, consumptionDto.getMonthTo().toUpperCase());
+
+        validateReadingPresence(profileId, meterId, readingFrom);
+        validateReadingPresence(profileId, meterId, readingTo);
+
+        consumptionDto.setConsumption(readingTo.get().getValue() - readingFrom.get().getValue());
+
+        return consumptionDto;
     }
 
     @Override
@@ -77,6 +96,16 @@ public class ReadingServiceImpl implements ReadingService {
         readingRepository.deleteAll(readings);
     }
 
+    private void validateMonthFromBeforeMonthTo(ConsumptionDto consumptionDto) {
+        Map<Integer, String> months = createMapOfMonths();
+
+        if (getKey(months, consumptionDto.getMonthFrom()) >= getKey(months, consumptionDto.getMonthTo())) {
+            throw new InvalidDataException(
+                    String.format("Month from (%s) is before month to (%s)",
+                            consumptionDto.getMonthFrom(), consumptionDto.getMonthTo()));
+        }
+    }
+
     /**
      * @param meterId is ID of Meter
      * @param readings is list of Readings by months
@@ -102,6 +131,13 @@ public class ReadingServiceImpl implements ReadingService {
     private void validateReadingFields(ReadingsDto readingsDto) {
         if (readingsDto.isAnyFieldNull()) {
             throw new DataMissingException("Readings by all 12 months must not be null.");
+        }
+    }
+
+    private void validateReadingPresence(Long profileId, Long meterId, Optional<Reading> reading) {
+        if (reading.isEmpty()) {
+            throw new DataNotFoundException(
+                    String.format("Readings for Profile with id %s and Meter with id %s not found", profileId, meterId));
         }
     }
 

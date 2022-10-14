@@ -29,6 +29,15 @@ public class ReadingController {
                 .body(ReadingMapper.toDtoList(readingService.getAll(profileId, meterId)));
     }
 
+    @GetMapping(path = "/consumption")
+    public ResponseEntity<ConsumptionDto> getConsumption(@PathVariable Long profileId,
+                                                         @PathVariable Long meterId,
+                                                         @RequestBody ConsumptionDto consumptionDto) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(readingService.getConsumption(profileId, meterId, consumptionDto));
+    }
+
     @PostMapping
     public ResponseEntity<List<ReadingDto>> create(@PathVariable Long profileId,
                                              @PathVariable Long meterId,

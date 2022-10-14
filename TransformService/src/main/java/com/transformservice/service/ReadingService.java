@@ -1,5 +1,6 @@
 package com.transformservice.service;
 
+import com.transformservice.domain.dto.ConsumptionDto;
 import com.transformservice.domain.dto.ReadingsDto;
 import com.transformservice.domain.entity.Reading;
 
@@ -11,6 +12,8 @@ import java.util.List;
  * @author veljkoplecas
  */
 public interface ReadingService {
+
+    ConsumptionDto getConsumption(Long profileId, Long meterId, ConsumptionDto consumptionDto);
 
     List<Reading> getAll(Long profileId, Long meterId);
 

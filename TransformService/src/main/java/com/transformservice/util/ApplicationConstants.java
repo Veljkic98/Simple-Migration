@@ -28,6 +28,23 @@ public class ApplicationConstants {
         return months;
     }
 
+    /**
+     * Method to return key by value from Map.
+     *
+     * @param map
+     * @param value
+     * @return
+     * @param <K>
+     * @param <V>
+     */
+    public static <K, V> K getKey(Map<K, V> map, V value)
+    {
+        return map.entrySet().stream()
+                .filter(entry -> value.equals(entry.getValue()))
+                .findFirst().map(Map.Entry::getKey)
+                .orElse(null);
+    }
+
     /** e.g. Fri Feb 23 14:37:37 CET 2018 */
     public static final String DATE_PATTERN = "EEE MMM dd HH:mm:ss zzz yyyy";
 
