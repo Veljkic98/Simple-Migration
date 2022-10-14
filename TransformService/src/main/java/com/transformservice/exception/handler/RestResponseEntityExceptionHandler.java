@@ -5,6 +5,7 @@ import com.transformservice.domain.dto.ErrorResponseDto;
 import com.transformservice.exception.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -46,6 +47,12 @@ public class RestResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = { InvalidDataException.class })
     protected ResponseEntity<ErrorResponseDto> handleBadRequest(final InvalidDataException e) {
+        log.warn(e.getMessage());
+        return createResponseEntity(createExceptionWrapper(e.getMessage(), HttpStatus.BAD_REQUEST));
+    }
+
+    @ExceptionHandler(value = { DataIntegrityViolationException.class })
+    protected ResponseEntity<ErrorResponseDto> handleBadRequest(final DataIntegrityViolationException e) {
         log.warn(e.getMessage());
         return createResponseEntity(createExceptionWrapper(e.getMessage(), HttpStatus.BAD_REQUEST));
     }
