@@ -30,4 +30,5 @@ public class FractionMapper {
                 .value(fraction.getValue())
                 .build();
     }
+
 }
