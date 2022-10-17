@@ -38,7 +38,7 @@ Run next command
 ### If this is not for the purpose of use case, following steps would be applied:
 - Implement Authentication and Authorization (OAuth2 - custom or Google's)
 - In case it is necessary to save files, than upload data files on some storage (on local env it could be Minio, on prod it could be AWS S3 for example)
-- Implement SQL scripts for data migrations using Flayway or Liquibase
+- Databse schema is created over model annotations. Later implement SQL Schema using Flayway or Liquibase
 - Increase test coverage of Integration and Unit tests at least to 80%
 - Additionally Configure where to write logs and present them through ELK stack
 - Cover all controllers with Swagger documentation
