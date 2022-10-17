@@ -8,13 +8,13 @@ It is simple application to store, retrieve and power measure data.
 
 ### Starting application with prod profile
 
-* Build Jar for Transform-Service. If you want to skip tests add `-DskipTests`
+* Build Jar for Energy-Consumption. If you want to skip tests add `-DskipTests`
 ```
 ./mvnw clean install
 ```
-* Build image for Transform-Service (API). 
+* Build image for Energy-Consumption (API). 
 ```
-docker build -f Dockerfile -t profile-service .
+docker build -f Dockerfile -t energy-consumption .
 ```
 
 * To start applicaiton go to docker file and run next command in terminal
