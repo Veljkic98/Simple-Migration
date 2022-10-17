@@ -280,28 +280,6 @@
 					"response": []
 				},
 				{
-					"name": "Get One Fraction",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8080/profile/1/fraction/2",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"profile",
-								"1",
-								"fraction",
-								"2"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "Create Fractions",
 					"request": {
 						"method": "POST",
