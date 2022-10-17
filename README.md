@@ -37,7 +37,7 @@ Run next command
 ## Future steps
 ### If this is not for the purpose of use case, following steps would be applied:
 - Implement Authentication and Authorization (OAuth2 - custom or Google's)
-- In case it is necessary to save files, than upload data files on some storage (on local env it could be Minio, on prod it could be AWS S3 for example)
+- In case it is necessary to save files, then upload data files on some storage like AWS S3 or Google's Cloud Storage for example
 - Databse schema is created over model annotations. Later implement SQL Schema using Flayway or Liquibase
 - Increase test coverage of Integration and Unit tests at least to 80%
 - Additionally Configure where to write logs and present them through ELK stack
