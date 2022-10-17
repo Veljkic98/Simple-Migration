@@ -735,6 +735,42 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Get All Consumption",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"monthFrom\": \"FEB\",\n    \"monthTo\": \"MAR\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/profile/1/meter/3/reading/consumption",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"profile",
+								"1",
+								"meter",
+								"3",
+								"reading",
+								"consumption"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		}

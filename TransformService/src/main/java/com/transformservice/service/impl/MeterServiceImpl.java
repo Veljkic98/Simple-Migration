@@ -64,8 +64,6 @@ public class MeterServiceImpl implements MeterService {
     }
 
     @Override
-    //todo test without transactional and delete
-//    @Transactional
     public void delete(Long profileId, Long meterId) {
         Meter meter = getById(profileId, meterId);
 
