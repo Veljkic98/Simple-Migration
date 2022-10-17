@@ -23,9 +23,9 @@ services:
       - "5050:80"
     volumes:
       - pg-data:/var/lib/pgadmin
-  transform_container:
-    container_name: transform_service_container
-    image: "transform-service:latest"
+  energy_consumption_container:
+    container_name: energy_consumption_container
+    image: "energy-consumption:latest"
     restart: always
     ports:
       - "8080:8080"
